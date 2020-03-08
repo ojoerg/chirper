@@ -1,0 +1,27 @@
+{
+  "name": "chirper",
+  "version": "1.0.0",
+  "description": "backend for chirper",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"node server.js\" \"npm run client\""
+  },
+  "author": "Oliver Jörg",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.0",
+    "express-session": "^1.17.0",
+    "mongoose": "^5.9.3",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^5.1.0"
+  }
+}
