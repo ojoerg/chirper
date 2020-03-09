@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getPosts, addPost, deletePost } = require("../controllers/chirperController")
+const { getPosts, addPost, deletePost } = require("../controllers/postController")
 
 router
     .route("/")
