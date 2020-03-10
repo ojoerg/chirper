@@ -2,17 +2,21 @@ import React, { useState, useContext } from "react";
 import { GlobalContext } from "../context/GlobalState";
 
 export const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const { loginUser } = useContext(GlobalContext);
+  const { loginUser, changePage } = useContext(GlobalContext);
+
+  const Click = e => {
+    changePage(e.target.value);
+  }
 
   const onSubmit = e => {
     e.preventDefault();
 
     const user = {
-      email: email,
-      password: password,
+      username: username,
+      password: password
     };
 
     loginUser(user);
@@ -27,19 +31,19 @@ export const Login = () => {
           </h1>
           <form onSubmit={onSubmit}>
             <div className="form-group">
-              <label for="email">Email</label>
+              <label htmlFor="username">Username</label>
               <input
-                type="email"
-                id="email"
-                name="email"
+                type="username"
+                id="username"
+                name="username"
                 className="form-control"
-                placeholder="Enter Email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
+                placeholder="Enter Username"
+                value={username}
+                onChange={e => setUsername(e.target.value)}
               />
             </div>
             <div className="form-group">
-              <label for="password">Password</label>
+              <label htmlFor="password">Password</label>
               <input
                 type="password"
                 id="password"
@@ -54,8 +58,8 @@ export const Login = () => {
               Login
             </button>
           </form>
-          <p class="lead mt-4">
-            No Account? <a href="/users/register">Register</a>
+          <p className="lead mt-4">
+            No Account? <button className="btn btn-secondary" value="register" onClick={Click}>Register</button>
           </p>
         </div>
       </div>

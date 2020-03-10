@@ -1,6 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GlobalContext } from '../context/GlobalState';
+
 
 export const Welcome = () => {
+  const { changePage } = useContext(GlobalContext);
+
+  const Click = e => {
+    changePage(e.target.value);
+  }
+
   return (
       <div className="row mt-5">
         <div className="col-md-6 m-auto">
@@ -9,12 +17,12 @@ export const Welcome = () => {
               <i className="fab fa-node-js fa-3x"></i>
             </h1>
             <p>Create an account or login</p>
-            <a href="/users/register" className="btn btn-primary btn-block mb-2">
+            <button className="btn btn-primary btn-block mb-2" value="register" onClick={Click}>
               Register
-            </a>
-            <a href="/users/login" className="btn btn-secondary btn-block">
+            </button>
+            <button className="btn btn-secondary btn-block" value="login" onClick={Click}>
               Login
-            </a>
+            </button>
           </div>
         </div>
       </div>

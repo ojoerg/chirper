@@ -2,10 +2,9 @@ import React, { createContext, useReducer } from "react";
 import AppReducer from "./AppReducer";
 
 // Initial State
-
 const initialState = {
-  newUser: {},
-  user: {}
+  page: "welcome", // welcome, register, login, home
+  message: ""
 };
 
 // Create context
@@ -16,27 +15,81 @@ export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
   // Actions
-
-  function addUser(user) {
-    dispatch({
-      type: "ADD_USER",
-      payload: user
-    });
+  async function registerUser(user) {
+    try {
+      console.log(user)
+      const res = await fetch("api/v1/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(user)
+      });
+      const response = await res.json();
+      console.log(response);
+      if (response.error){
+        throw response.error
+      } else {
+        dispatch({
+          type: "REGISTER_USER",
+          payload: "User successfully created"
+        });
+      }
+      dispatch({
+        type: "REGISTER_USER",
+        payload: "User successfully created"
+      });
+    } catch (err) {
+      dispatch({
+        type: "REGISTER_ERROR",
+        payload: err
+      });
+    }
   }
 
-  function loginUser(user) {
+  async function loginUser(user) {
+    try {
+      const res = await fetch("api/v1/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(user)
+      });
+      const response = await res.json();
+      console.log(response);
+      
+      if (response.error){
+        throw response.error
+      } else {
+        dispatch({
+          type: "LOGIN_USER",
+          payload: response.message
+        });
+      }
+    } catch (err) {
+      console.log(JSON.stringify(err))
+      dispatch({
+        type: "LOGIN_ERROR",
+        payload: err.response.data.error
+      });
+    }
+  }
+
+  function changePage(page) {
     dispatch({
-      type: "LOGIN_USER",
-      payload: user
+      type: "CHANGE_PAGE",
+      payload: page
     });
   }
 
   return (
     <GlobalContext.Provider
       value={{
-        newUser: state.newUser,
-        user: state.user,
-        addUser,
+        page: state.page,
+        message: state.message,
+        changePage,
+        registerUser,
         loginUser
       }}>
       {children}

@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("passport")
+const morgan = require('morgan');
 
 const posts = require("./routes/posts");
 const users = require("./routes/index");
@@ -17,6 +18,8 @@ require("./config/passport")(passport)
 connectDB();
 
 const app = express();
+
+app.use(morgan('common'));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())

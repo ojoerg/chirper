@@ -8,19 +8,24 @@ export const Register = () => {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
 
-  const { addUser } = useContext(GlobalContext);
+  const { registerUser, changePage } = useContext(GlobalContext);
+
+  const Click = e => {
+    changePage(e.target.value);
+  }
 
   const onSubmit = e => {
     e.preventDefault();
 
     const newUser = {
       name: name,
+      username: username,
       email: email,
       password: password,
       password2: password2
     };
 
-    addUser(newUser);
+    registerUser(newUser);
   };
 
   return (
@@ -96,7 +101,7 @@ export const Register = () => {
             </button>
           </form>
           <p className="lead mt-4">
-            Have An Account? <a href="/users/login">Login</a>
+            Have An Account? <button className="btn btn-secondary" value="login" onClick={Click}>Login</button>
           </p>
         </div>
       </div>

@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const bcrypt = require("bcryptjs");
+const passport = require("passport");
 
 // @desc       Get all users
 // @route      GET /api/v1/users
@@ -22,32 +24,58 @@ exports.getUsers = async (req, res, next) => {
 // @desc       Get one user by username
 // @route      GET /api/v1/users
 // @access     Public
-exports.getUser = async (req, res, next) => {
-  try {
-    const user = await User.find({ username: req.params.username });
+exports.loginUser = (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (user === false){
+      const message = info.error;
+      return res.status(401).json({
+        success: false,
+        error: message
+      })
+    }
+
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: "Server Error"
+      });
+    }
+
     return res.status(200).json({
       success: true,
-      count: user.length,
-      data: user
+      username: user.username
     });
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      error: "Server Error"
-    });
-  }
-};
+  })(req, res, next)
+}
+
 
 // @desc       Add user
 // @route      POST /api/v1/users
 // @access     Public
 exports.addUser = async (req, res, next) => {
   try {
-    const user = await User.create(req.body);
+    //const user = await User.create(req.body);
+    const { name, username, email, password, password2 } = req.body;
+    const hashSaltPassword = await new Promise((resolve, reject) => {
+      bcrypt.genSalt(10, (err, salt) => {
+        if (err) reject(err);
+        bcrypt.hash(password, salt, (err, hash) => {
+          if (err) reject(err);
+          resolve(hash);
+        });
+      });
+    });
+
+    const user = await User.create({
+      name: name,
+      username: username,
+      email: email,
+      password: hashSaltPassword
+    });
 
     return res.status(201).json({
       success: true,
-      data: user
+      message: "User successfully created"
     });
   } catch (err) {
     if (err.name === "ValidationError") {
