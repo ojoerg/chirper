@@ -3,8 +3,9 @@ import AppReducer from "./AppReducer";
 
 // Initial State
 const initialState = {
-  page: "welcome", // welcome, register, login, home
-  message: ""
+  message: "",
+  loggedIn: false,
+  username: "",
 };
 
 // Create context
@@ -15,9 +16,36 @@ export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
   // Actions
+  async function checkAuthenticated() {
+    try {
+      const res = await fetch("api/v1/users/authenticated", {
+          credentials: "include"
+      });
+      const response = await res.json();
+      console.log(response)
+
+      if (response.error) {
+        throw response.error;
+      } else if (response.success === false) {
+        dispatch({
+          type: "AUTHENTICATE_ERROR"
+        });
+      }else {
+        dispatch({
+          type: "AUTHENTICATE_USER",
+          username: response.username
+        });
+      }
+    } catch (err) {
+      dispatch({
+        type: "AUTHENTICATE_ERROR",
+        msg: err
+      });
+    }
+  }
+
   async function registerUser(user) {
     try {
-      console.log(user)
       const res = await fetch("api/v1/users/register", {
         method: "POST",
         headers: {
@@ -26,23 +54,18 @@ export const GlobalProvider = ({ children }) => {
         body: JSON.stringify(user)
       });
       const response = await res.json();
-      console.log(response);
-      if (response.error){
-        throw response.error
+      if (response.error) {
+        throw response.error;
       } else {
         dispatch({
           type: "REGISTER_USER",
-          payload: "User successfully created"
+          msg: "User successfully created"
         });
       }
-      dispatch({
-        type: "REGISTER_USER",
-        payload: "User successfully created"
-      });
     } catch (err) {
       dispatch({
         type: "REGISTER_ERROR",
-        payload: err
+        msg: err
       });
     }
   }
@@ -57,38 +80,31 @@ export const GlobalProvider = ({ children }) => {
         body: JSON.stringify(user)
       });
       const response = await res.json();
-      console.log(response);
-      
-      if (response.error){
-        throw response.error
+
+      if (response.error) {
+        throw response.error;
       } else {
         dispatch({
           type: "LOGIN_USER",
-          payload: response.message
+          msg: response.message,
+          username: response.username
         });
       }
     } catch (err) {
-      console.log(JSON.stringify(err))
       dispatch({
         type: "LOGIN_ERROR",
-        payload: err.response.data.error
+        msg: err.data.error
       });
     }
-  }
-
-  function changePage(page) {
-    dispatch({
-      type: "CHANGE_PAGE",
-      payload: page
-    });
   }
 
   return (
     <GlobalContext.Provider
       value={{
-        page: state.page,
         message: state.message,
-        changePage,
+        loggedIn: state.loggedIn,
+        username: state.username,
+        checkAuthenticated,
         registerUser,
         loginUser
       }}>

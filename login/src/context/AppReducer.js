@@ -1,37 +1,45 @@
 export default (state, action) => {
   switch (action.type) {
-    case "CHANGE_PAGE":
-      return {
-        ...state,
-        page: action.payload
-      };
-
     case "LOGIN_USER":
       return {
         ...state,
-        page: "home",
-        message: action.payload
+        message: action.msg,
+        loggedIn: true,
+        username: action.username
+      };
+
+    case "AUTHENTICATE_USER":
+      return {
+        ...state,
+        loggedIn: true,
+        username: action.username
       };
 
     case "REGISTER_USER":
       return {
         ...state,
-        page: "login",
-        message: action.payload
+        message: action.msg,
+        loggedIn: false
       };
 
     case "REGISTER_ERROR":
       return {
         ...state,
-        page: "register",
-        message: action.payload
+        message: action.msg,
+        loggedIn: false
       };
 
     case "LOGIN_ERROR":
       return {
         ...state,
-        page: "login",
-        message: action.payload
+        message: action.msg,
+        loggedIn: false
+      };
+
+    case "AUTHENTICATE_ERROR":
+      return {
+        ...state,
+        loggedIn: false
       };
 
     default:

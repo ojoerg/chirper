@@ -8,11 +8,7 @@ export const Register = () => {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
 
-  const { registerUser, changePage } = useContext(GlobalContext);
-
-  const Click = e => {
-    changePage(e.target.value);
-  }
+  const { registerUser } = useContext(GlobalContext);
 
   const onSubmit = e => {
     e.preventDefault();
@@ -35,7 +31,7 @@ export const Register = () => {
           <h1 className="text-center mb-3">
             <i className="fas fa-user-plus"></i> Register
           </h1>
-           <form onSubmit={onSubmit}> 
+          <form onSubmit={onSubmit}>
             <div className="form-group">
               <label htmlFor="name">Name</label>
               <input
@@ -45,7 +41,7 @@ export const Register = () => {
                 className="form-control"
                 placeholder="Enter Name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={e => setName(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -57,7 +53,7 @@ export const Register = () => {
                 className="form-control"
                 placeholder="Enter Username"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={e => setUsername(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -69,7 +65,7 @@ export const Register = () => {
                 className="form-control"
                 placeholder="Enter Email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -81,7 +77,7 @@ export const Register = () => {
                 className="form-control"
                 placeholder="Create Password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -93,7 +89,7 @@ export const Register = () => {
                 className="form-control"
                 placeholder="Confirm Password"
                 value={password2}
-                onChange={(e) => setPassword2(e.target.value)}
+                onChange={e => setPassword2(e.target.value)}
               />
             </div>
             <button type="submit" className="btn btn-primary btn-block">
@@ -101,7 +97,7 @@ export const Register = () => {
             </button>
           </form>
           <p className="lead mt-4">
-            Have An Account? <button className="btn btn-secondary" value="login" onClick={Click}>Login</button>
+            Have An Account? <a href="login">Login</a>
           </p>
         </div>
       </div>

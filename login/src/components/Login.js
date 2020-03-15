@@ -5,11 +5,7 @@ export const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const { loginUser, changePage } = useContext(GlobalContext);
-
-  const Click = e => {
-    changePage(e.target.value);
-  }
+  const { loginUser } = useContext(GlobalContext);
 
   const onSubmit = e => {
     e.preventDefault();
@@ -54,12 +50,14 @@ export const Login = () => {
                 onChange={e => setPassword(e.target.value)}
               />
             </div>
-            <button type="submit" className="btn btn-primary btn-block">
-              Login
-            </button>
+            <a href="home">
+              <button type="submit" className="btn btn-primary btn-block">
+                Login
+              </button>
+            </a>
           </form>
           <p className="lead mt-4">
-            No Account? <button className="btn btn-secondary" value="register" onClick={Click}>Register</button>
+            No Account? <a href="register">Register</a>
           </p>
         </div>
       </div>

@@ -6,18 +6,21 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("passport")
 const morgan = require('morgan');
+const MongoStore = require('connect-mongo')(session)
 
 const posts = require("./routes/posts");
 const users = require("./routes/index");
 
 dotenv.config({ path: "./config/config.env" })
 
+
 require("./config/passport")(passport)
 
 
-connectDB();
+const dbConnection = connectDB();
 
 const app = express();
+app.disable('x-powered-by');
 
 app.use(morgan('common'));
 
@@ -27,9 +30,18 @@ app.use(express.json())
 // Express session
 app.use(
   session({
-    secret: 'secret',
-    resave: true,
-    saveUninitialized: true
+    name: process.env.SESSION_NAME,
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    store: new MongoStore({ 
+      url: process.env.MONGO_URI,
+    }),
+    saveUninitialized: false,
+    cookie: {
+      sameSite: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60*60*24*2*1000 // 2 days
+    }
   })
 );
 

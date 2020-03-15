@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getUsers, loginUser, addUser, deleteUser } = require("../controllers/userController")
+const { getUsers, loginUser, addUser, authenticatedUser, deleteUser } = require("../controllers/userController")
 const { ensureAuthenticated, forwardAuthenticated } = require('../config/auth');
 
 
@@ -18,6 +18,11 @@ router
 router
     .route("/login")
     .post(loginUser)
+
+// Authenticate User
+router
+    .route("/authenticated")
+    .get(authenticatedUser)
 
 // Delete User
 router

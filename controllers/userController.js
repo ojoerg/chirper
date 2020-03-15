@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Session = require("../models/Session");
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 
@@ -41,11 +42,40 @@ exports.loginUser = (req, res, next) => {
       });
     }
 
+    req.session.username = user.username
+    
     return res.status(200).json({
       success: true,
       username: user.username
     });
   })(req, res, next)
+}
+
+// @desc       Get one user by username
+// @route      GET /api/v1/users
+// @access     Public
+exports.authenticatedUser = async (req, res, next) => {
+  try {
+    const sessionId = req.sessionID
+    const session = await Session.findOne({ _id: sessionId});
+    if (session && JSON.parse(session.session).username) {
+      return res.status(200).json({
+        success: true,
+        username: JSON.parse(session.session).username
+      });
+    } else {
+      return res.status(401).json({
+        success: false
+      });
+    }
+
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      success: false,
+      error: "Server Error"
+    });
+  }
 }
 
 
