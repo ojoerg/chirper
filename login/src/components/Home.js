@@ -1,11 +1,13 @@
-import React, { useContext } from 'react';
-import { GlobalContext } from '../context/GlobalState';
+import React from "react";
+import { Header } from "./Header";
+import { Feed } from "./Feed";
 
 export const Home = () => {
-    const { username } = useContext(GlobalContext);
-    return (
-        <div>
-            <h1>HOME of {username}</h1>
-        </div>
-    )
+
+  return (
+    <>
+      <Header />
+      <Feed />
+    </>
+  );
 }

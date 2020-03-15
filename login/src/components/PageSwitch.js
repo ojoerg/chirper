@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, Suspense } from "react";
-import { Route, Switch, Redirect, Lo } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 import { Welcome } from "./Welcome";
 import { Register } from "./Register";
@@ -20,7 +20,7 @@ export const PageSwitch = () => {
       setAuthenticatedChecked(true);
       
     //}, 1000);
-    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loggedInChangePage = () => {
