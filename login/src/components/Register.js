@@ -35,7 +35,7 @@ export const Register = () => {
             <div className="form-group">
               <label htmlFor="name">Name</label>
               <input
-                type="name"
+                type="text"
                 id="name"
                 name="name"
                 className="form-control"
@@ -47,7 +47,7 @@ export const Register = () => {
             <div className="form-group">
               <label htmlFor="username">Username</label>
               <input
-                type="username"
+                type="text"
                 id="username"
                 name="username"
                 className="form-control"

@@ -8,6 +8,13 @@ export default (state, action) => {
         username: action.username
       };
 
+    case "CHANGE_USER":
+      return {
+        ...state,
+        username: action.username,
+        message: action.msg
+      };
+
     case "AUTHENTICATE_USER":
       return {
         ...state,
@@ -20,6 +27,13 @@ export default (state, action) => {
         ...state,
         message: action.msg,
         loggedIn: false
+      };
+
+    case "LOGOUT_USER":
+      return {
+        ...state,
+        loggedIn: false,
+        username: ""
       };
 
     case "REGISTER_ERROR":
@@ -36,23 +50,46 @@ export default (state, action) => {
         loggedIn: false
       };
 
+    case "CHANGE_ERROR":
+      return {
+        ...state,
+        message: action.msg
+      };
+
     case "AUTHENTICATE_ERROR":
       return {
         ...state,
         loggedIn: false
       };
 
+    case "LOGOUT_ERROR":
+      return {
+        ...state,
+        message: action.msg
+      };
+
     case "GET_POSTS":
       return {
         ...state,
-        //loading: false,
         posts: action.payload
+      };
+
+    case "GET_USERS":
+      return {
+        ...state,
+        users: action.payload
+      };
+    case "GET_USER":
+      return {
+        ...state,
+        user: action.payload
       };
 
     case "TOGGLE_POPUP":
       return {
         ...state,
-        popup: action.payload
+        popup: action.popup,
+        popupType: action.popupType
       };
 
     case "ADD_POST":
@@ -60,8 +97,19 @@ export default (state, action) => {
         ...state,
         posts: [...state.posts, action.payload]
       };
-      
-    case "POST_ERROR":
+
+    case "POSTS_ERROR":
+      return {
+        ...state,
+        error: action.payload
+      };
+
+    case "USERS_ERROR":
+      return {
+        ...state,
+        error: action.payload
+      };
+    case "USER_ERROR":
       return {
         ...state,
         error: action.payload

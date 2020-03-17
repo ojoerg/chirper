@@ -1,13 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const { getUsers, loginUser, addUser, authenticatedUser, deleteUser } = require("../controllers/userController")
+const { getUsers, getUser, loginUser, addUser, authenticatedUser, logoutUser, changeUser, deleteUser } = require("../controllers/userController")
 const { ensureAuthenticated, forwardAuthenticated } = require('../config/auth');
 
 
 // Find all Users
+// Find one User
 router
     .route("/")
     .get(getUsers)
+    .post(getUser)
 
 // Register User
 router
@@ -23,6 +25,16 @@ router
 router
     .route("/authenticated")
     .get(authenticatedUser)
+
+// Logout User
+router
+    .route("/logout")
+    .get(logoutUser)
+
+// Change User
+router
+    .route("/change")
+    .post(changeUser)
 
 // Delete User
 router

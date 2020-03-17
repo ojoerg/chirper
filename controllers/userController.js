@@ -2,19 +2,88 @@ const User = require("../models/User");
 const Session = require("../models/Session");
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
+const { setPassword } = require("./helper/passwordHashSalt");
 
 // @desc       Get all users
 // @route      GET /api/v1/users
 // @access     Public
 exports.getUsers = async (req, res, next) => {
   try {
-    const users = await User.find();
+    const users = await User.find().select("username");
     return res.status(200).json({
       success: true,
-      count: users.length,
       data: users
     });
   } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: "Server Error"
+    });
+  }
+};
+
+// @desc       Get user
+// @route      POST /api/v1/users
+// @access     Public
+exports.getUser = async (req, res, next) => {
+  try {
+    const { username } = req.body;
+
+    const user = await User.findOne({ username }).select("name username email");
+    return res.status(200).json({
+      success: true,
+      data: user
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: "Server Error"
+    });
+  }
+};
+
+// @desc       Change User
+// @route      POST /api/v1/users/change
+// @access     Public
+exports.changeUser = async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const { type, text, username } = req.body;
+
+    const user = await User.findOne({ username });
+    let newUser, newUsername;
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        error: "User not Found"
+      });
+    }
+
+    switch (type) {
+      case "name":
+        newUser = await User.updateOne({ username }, { name: text });
+        break;
+      case "email":
+        newUser = await User.updateOne({ username }, { email: text });
+        break;
+      case "password":
+        const password = await setPassword(text[0]);
+        newUser = await User.updateOne({ username }, { password: password });
+        break;
+      case "username":
+        newUser = await User.updateOne({ username }, { username: text });
+        break;
+    }
+
+    type === "username" ? (newUsername = text) : (newUsername = username);
+
+    return res.status(200).json({
+      success: true,
+      username: newUsername
+    });
+  } catch (err) {
+    console.log(err);
     return res.status(500).json({
       success: false,
       error: "Server Error"
@@ -26,13 +95,13 @@ exports.getUsers = async (req, res, next) => {
 // @route      GET /api/v1/users
 // @access     Public
 exports.loginUser = (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (user === false){
+  passport.authenticate("local", (err, user, info) => {
+    if (user === false) {
       const message = info.error;
       return res.status(401).json({
         success: false,
         error: message
-      })
+      });
     }
 
     if (err) {
@@ -42,22 +111,22 @@ exports.loginUser = (req, res, next) => {
       });
     }
 
-    req.session.username = user.username
-    
+    req.session.username = user.username;
+
     return res.status(200).json({
       success: true,
       username: user.username
     });
-  })(req, res, next)
-}
+  })(req, res, next);
+};
 
 // @desc       Get one user by username
 // @route      GET /api/v1/users
 // @access     Public
 exports.authenticatedUser = async (req, res, next) => {
   try {
-    const sessionId = req.sessionID
-    const session = await Session.findOne({ _id: sessionId});
+    const sessionId = req.sessionID;
+    const session = await Session.findOne({ _id: sessionId });
     if (session && JSON.parse(session.session).username) {
       return res.status(200).json({
         success: true,
@@ -68,16 +137,14 @@ exports.authenticatedUser = async (req, res, next) => {
         success: false
       });
     }
-
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.status(500).json({
       success: false,
       error: "Server Error"
     });
   }
-}
-
+};
 
 // @desc       Add user
 // @route      POST /api/v1/users
@@ -86,15 +153,7 @@ exports.addUser = async (req, res, next) => {
   try {
     //const user = await User.create(req.body);
     const { name, username, email, password, password2 } = req.body;
-    const hashSaltPassword = await new Promise((resolve, reject) => {
-      bcrypt.genSalt(10, (err, salt) => {
-        if (err) reject(err);
-        bcrypt.hash(password, salt, (err, hash) => {
-          if (err) reject(err);
-          resolve(hash);
-        });
-      });
-    });
+    const hashSaltPassword = await setPassword(password);
 
     const user = await User.create({
       name: name,
@@ -126,6 +185,28 @@ exports.addUser = async (req, res, next) => {
         error: "Server Error"
       });
     }
+  }
+};
+
+// @desc       Logout User
+// @route      GET /api/v1/users/logout
+// @access     Public
+exports.logoutUser = async (req, res, next) => {
+  try {
+    if (req.session) {
+      await req.logout(); //logout in passport (clear req.user)
+      await req.session.destroy(); // logout in express-session
+    }
+
+    return res.status(200).json({
+      success: true
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      success: false,
+      error: "Server Error"
+    });
   }
 };
 

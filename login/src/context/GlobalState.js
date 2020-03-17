@@ -4,13 +4,13 @@ import AppReducer from "./AppReducer";
 // Initial State
 const initialState = {
   message: "",
-  loggedIn: false,
   username: "",
   popup: false,
+  popupType: "",
   posts: [],
-  error: null,
-  //loading: true,
-  user: "test"
+  users: [],
+  user: {},
+  error: null
 };
 
 // Create context
@@ -21,26 +21,27 @@ export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
   // Actions
-  async function checkAuthenticated() {
+  async function checkAuthenticated(callback) {
     try {
       const res = await fetch("api/v1/users/authenticated", {
-          credentials: "include"
+        credentials: "include"
       });
       const response = await res.json();
-      console.log(response)
 
       if (response.error) {
         throw response.error;
       } else if (response.success === false) {
         dispatch({
-          type: "AUTHENTICATE_ERROR"
+          type: "AUTHENTICATE_ERROR",
+          msg: "Authentication error"
         });
-      }else {
+      } else {
         dispatch({
           type: "AUTHENTICATE_USER",
           username: response.username
         });
       }
+      await callback;
     } catch (err) {
       dispatch({
         type: "AUTHENTICATE_ERROR",
@@ -103,11 +104,67 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  async function changeUserProperty(dataToChange) {
+    try {
+      const res = await fetch("api/v1/users/change", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataToChange)
+      });
+
+      const response = await res.json();
+
+      if (response.error) {
+        throw response.error;
+      } else {
+        dispatch({
+          type: "CHANGE_USER",
+          msg: response.message,
+          username: response.username
+        });
+      }
+    } catch (err) {
+      dispatch({
+        type: "CHANGE_ERROR",
+        msg: err
+      });
+    }
+  }
+
+  async function logoutUser() {
+    try {
+      const res = await fetch("api/v1/users/logout", {
+        credentials: "include"
+      });
+      const response = await res.json();
+
+      if (response.error) {
+        throw response.error;
+      } else if (response.success === false) {
+        dispatch({
+          type: "LOGOUT_ERROR",
+          msg: "Logout Error"
+        });
+      } else {
+        dispatch({
+          type: "LOGOUT_USER",
+          username: ""
+        });
+      }
+    } catch (err) {
+      dispatch({
+        type: "LOGOUT_ERROR",
+        msg: err
+      });
+    }
+  }
+
   async function getPosts() {
     try {
       const res = await fetch("api/v1/posts");
       const posts = await res.json();
-      console.log(posts.data);
 
       dispatch({
         type: "GET_POSTS",
@@ -115,16 +172,61 @@ export const GlobalProvider = ({ children }) => {
       });
     } catch (err) {
       dispatch({
-        type: "POST_ERROR",
+        type: "POSTS_ERROR",
         payload: err.response.data.error
       });
     }
   }
 
-  function togglePopup(boolVal) {
+  async function getUsers() {
+    try {
+      const res = await fetch("api/v1/users");
+      const users = await res.json();
+
+      dispatch({
+        type: "GET_USERS",
+        payload: users.data
+      });
+    } catch (err) {
+      dispatch({
+        type: "USERS_ERROR",
+        payload: err.response.data.error
+      });
+    }
+  }
+
+  async function getUser(user) {
+    try {
+      const res = await fetch("api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username: user })
+      });
+      const userData = await res.json();
+
+      dispatch({
+        type: "GET_USER",
+        payload: userData.data
+      });
+    } catch (err) {
+      dispatch({
+        type: "USER_ERROR",
+        payload: err
+      });
+    }
+  }
+
+  function togglePopup(boolVal, type) {
+    if (!type) {
+      type = "";
+    }
+
     dispatch({
       type: "TOGGLE_POPUP",
-      payload: boolVal
+      popup: boolVal,
+      popupType: type
     });
   }
 
@@ -138,8 +240,6 @@ export const GlobalProvider = ({ children }) => {
         body: JSON.stringify(post)
       });
       const response = await res.json();
-
-      console.log(response);
 
       dispatch({
         type: "ADD_POST",
@@ -160,15 +260,22 @@ export const GlobalProvider = ({ children }) => {
         loggedIn: state.loggedIn,
         username: state.username,
         popup: state.popup,
+        popupType: state.popupType,
         posts: state.posts,
+        users: state.users,
+        user: state.user,
         error: state.error,
         loading: state.loading,
+        logoutUser,
         getPosts,
+        getUsers,
+        getUser,
         togglePopup,
         addPost,
         checkAuthenticated,
         registerUser,
-        loginUser
+        loginUser,
+        changeUserProperty
       }}>
       {children}
     </GlobalContext.Provider>

@@ -1,126 +1,18 @@
-.App {
-  text-align: center;
-}
+/*@import "https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css";*/
+@import "https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cosmo/bootstrap.min.css";
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css";
+@import "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css";
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-:root,
-* {
-  box-sizing: border-box;
-  margin: 0;
+.navbar-brand {
   padding: 0;
-  /* background: #736e6e; */
-  background: #3a74ff;
-  color: #fff;
-  font-family: "Verdana", sans-serif;
-  --header-color: #2c3e50;
+  line-height: 1;
 }
 
-.header-container .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 60px;
-  background: var(--header-color);
-  -webkit-box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.75);
+.nav-link {
+    color: #fff;
 }
 
-.header-container .header .header-div {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-left: 20px;
-  background: inherit;
-  height: 100%;
-}
-
-.header-container .header .header-div h1,
-.header-container .header .header-div i {
-  margin-left: 20px;
-  background: inherit;
-}
-
-.header-container .header nav {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  background: inherit;
-  margin-right: 10px;
-}
-
-.header-container .header nav ul {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  background: inherit;
-}
-
-.header-container .header nav ul li {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  list-style: none;
-  height: 80%;
-  background: inherit;
-  margin-right: 10px;
-}
-
-.header-container .header nav ul li button {
-  list-style: none;
-  background: inherit;
-  border: none;
-  font-size: inherit;
-  height: 100%;
-  padding: 0 10px 0 10px;
-  border: 1px solid var(--header-color);
-  width: 100px;
-  font-size: 20px;
-}
-
-.header-container .header ul li button:hover {
-  /*background: rgb(14, 29, 63);
-  border-radius: 15px;*/
-  color: #3a74ff;
-}
-
-.header-container .popup {
+.popup {
   position: fixed;
   padding: 0;
   margin: 0;
@@ -128,29 +20,33 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(128, 127, 127, 0.5);
+  background: rgba(128, 127, 127, 0.7);
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  z-index: 1;
 }
 
-.header-container .popup .create-post {
+.card {
+    width: 50vw;
+    max-width: 700px;
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 700px;
+  }
+}
+
+/*.popup .create-post {
   margin-top: 30vh;
-  width: 50vw;
   position: fixed;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  background: var(--header-color);
-  color: var(--header-color);
-  padding: 20px;
-  border: 1px solid var(--header-color);
-  border-radius: 10px;
 }
 
-
-.header-container .popup .create-post form {
+.popup .create-post form {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -158,20 +54,13 @@
   width: 100%;
 }
 
-.header-container .popup .create-post input {
+.popup .create-post input {
   width: 100%;
 }
 
-
-.header-container .popup .create-post h3,
-.header-container .popup .create-post form,
-.header-container .popup .create-post form input {
+.popup .create-post h3,
+.popup .create-post form,
+.popup .create-post form input {
   background: var(--header-color);
 }
-
-.feed {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
+*/

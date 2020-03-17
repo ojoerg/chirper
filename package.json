@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node server",
     "server": "nodemon server",
-    "client": "npm start --prefix client",
     "login": "npm start --prefix login",
     "dev": "concurrently \"npm run server\" \"npm run login\""
   },

@@ -1,12 +1,12 @@
 import React from "react";
-import { Header } from "./Header";
+import { HeaderHome } from "./HeaderHome";
 import { Feed } from "./Feed";
 
 export const Home = () => {
 
   return (
     <>
-      <Header />
+      <HeaderHome />
       <Feed />
     </>
   );

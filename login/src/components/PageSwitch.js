@@ -7,6 +7,7 @@ import { Login } from "./Login";
 import { NotFound } from "./NotFound";
 import { Home } from "./Home";
 import { Loading } from "./Loading";
+import { Profile } from "./Profile";
 
 import { GlobalContext } from "../context/GlobalState";
 
@@ -15,43 +16,39 @@ export const PageSwitch = () => {
   const [authenticatedChecked, setAuthenticatedChecked] = useState(false);
 
   useEffect(() => {
-    //setTimeout(() => {
-      checkAuthenticated()
-      setAuthenticatedChecked(true);
-      
-    //}, 1000);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    checkAuthenticated(setAuthenticatedChecked(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loggedInChangePage = () => {
-    
     if (loggedIn === true && username !== "") {
       return (
         <Switch>
           <Route path="/home" component={Home} />
+          <Route path="/profile" component={Profile} />
           <Route path="/">
             <Redirect to="/home" />
           </Route>
-          
+
           <Route component={NotFound} />
         </Switch>
       );
-    } else if (loggedIn === false && authenticatedChecked === false) {
-      return (
-        <Switch>
-          <Route path="/" component={Loading} />
-          <Route component={NotFound} />
-        </Switch>
-      );
-    } else {
+    } else if (loggedIn === false && authenticatedChecked === true) {
       return (
         <Switch>
           <Route path="/" exact component={Welcome} />
           <Route path="/register" component={Register} />
           <Route path="/login" component={Login} />
           <Route path="/home">
-            <Redirect to="/"/>
+            <Redirect to="/" />
           </Route>
+          <Route component={NotFound} />
+        </Switch>
+      );
+    } else {
+      return (
+        <Switch>
+          <Route path="/" component={Loading} />
           <Route component={NotFound} />
         </Switch>
       );

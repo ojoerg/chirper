@@ -5,7 +5,7 @@ const Post = require("../models/Post");
 // @access     Public
 exports.getPosts = async (req, res, next) => {
   try {
-    const posts = await Post.find();
+    const posts = await Post.find({}, null, {sort: {created: -1}});
     return res.status(200).json({
       success: true,
       count: posts.length,
