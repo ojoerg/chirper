@@ -5,13 +5,15 @@ export default (state, action) => {
         ...state,
         message: action.msg,
         loggedIn: true,
-        username: action.username
+        username: action.username,
+        follows: action.follows
       };
 
     case "CHANGE_USER":
       return {
         ...state,
         username: action.username,
+        user: action.user,
         message: action.msg
       };
 
@@ -19,7 +21,8 @@ export default (state, action) => {
       return {
         ...state,
         loggedIn: true,
-        username: action.username
+        username: action.username,
+        follows: action.follows
       };
 
     case "REGISTER_USER":
@@ -74,6 +77,12 @@ export default (state, action) => {
         posts: action.payload
       };
 
+    case "GET_POSTS_FROM_FOLLOWED_USERS":
+      return {
+        ...state,
+        posts: action.payload
+      };
+
     case "GET_USERS":
       return {
         ...state,
@@ -91,14 +100,38 @@ export default (state, action) => {
         popup: action.popup,
         popupType: action.popupType
       };
-
+      
+    case "TOGGLE_ALLPOSTS":
+      return {
+        ...state,
+        allPosts: action.allPosts
+      };
+      
     case "ADD_POST":
       return {
         ...state,
         posts: [...state.posts, action.payload]
       };
 
+    case "ADD_FOLLOW":
+      return {
+        ...state,
+        follows: [...state.follows, action.payload]
+      };
+
     case "POSTS_ERROR":
+      return {
+        ...state,
+        error: action.payload
+      };
+
+    case "POSTS_FROM_FOLLOWED_USERS_ERROR":
+      return {
+        ...state,
+        error: action.payload
+      };
+
+    case "FOLLOW_ERROR":
       return {
         ...state,
         error: action.payload

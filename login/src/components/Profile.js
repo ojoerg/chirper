@@ -16,7 +16,7 @@ export const Profile = () => {
   }, []); // empty array for no loop
 
   const onSubmit = type => e => {
-    //e.preventDefault();
+    e.preventDefault();
     let text = "",
       text2 = "",
       dataToChange = {};
@@ -52,17 +52,18 @@ export const Profile = () => {
         username: username
       };
     }
-
     changeUserProperty(dataToChange);
   };
 
   return (
     <>
       <HeaderProfile />
-      <div className="row mt-5">
-        <div className="col-md-6 m-auto">
-          <div className="card card-body">
-            <h1 className="text-center mb-3">Profil of {username}</h1>
+      <div className="row mt-5 mx-auto">
+        <div className="card col-md-6 m-auto pl-0 pr-0">
+        <div className="bg-primary text-light card-header">
+            <h1 className="text-center mb-1">Profil of {username}</h1>
+          </div>
+            <div className="card-body">
             <form onSubmit={onSubmit("name")}>
               <div className="form-group col-md-10">
                 <label htmlFor="newName">Current Name: {user.name}</label>

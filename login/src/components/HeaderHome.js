@@ -4,7 +4,7 @@ import { Popup } from "./Popup";
 import { Link } from "react-router-dom";
 
 export const HeaderHome = () => {
-  const { togglePopup, popup, logoutUser } = useContext(GlobalContext);
+  const { togglePopup, popup, logoutUser, toggleAllPosts, allPosts } = useContext(GlobalContext);
 
   return (
     <nav className="nav navbar navbar-dark bg-primary p-0">
@@ -14,14 +14,37 @@ export const HeaderHome = () => {
           Chirper
         </h1>
       </a>
-      <ul className="nav justify-content-end">
+      {allPosts ? (
+        <Link
+          to="/home"
+          type="button"
+          className="btn btn-link nav-link"
+          onClick={() => toggleAllPosts(!allPosts)}>
+          Home
+        </Link>
+      ) : (
+        <Link
+          to="/allposts"
+          type="button"
+          className="btn btn-link nav-link"
+          onClick={() => toggleAllPosts(!allPosts)}>
+          All Posts
+        </Link>
+      )}
+      <ul className="nav justify-content-between">
         <li className="nav-item">
-          <button type="button" className="btn btn-link nav-link" onClick={() => togglePopup(true, "post")}>
+          <button
+            type="button"
+            className="btn btn-link nav-link"
+            onClick={() => togglePopup(true, "post")}>
             Post
           </button>
         </li>
         <li className="nav-item">
-          <button type="button" className="btn btn-link nav-link" onClick={() => togglePopup(true, "users")}>
+          <button
+            type="button"
+            className="btn btn-link nav-link"
+            onClick={() => togglePopup(true, "users")}>
             Users
           </button>
         </li>

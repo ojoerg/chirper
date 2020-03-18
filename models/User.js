@@ -21,7 +21,8 @@ const UserSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now
-  }
+  },
+  follows: []
 });
 
 const User = mongoose.model('User', UserSchema);

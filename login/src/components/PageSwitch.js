@@ -8,6 +8,7 @@ import { NotFound } from "./NotFound";
 import { Home } from "./Home";
 import { Loading } from "./Loading";
 import { Profile } from "./Profile";
+import { AllPosts } from "./AllPosts";
 
 import { GlobalContext } from "../context/GlobalState";
 
@@ -26,6 +27,7 @@ export const PageSwitch = () => {
         <Switch>
           <Route path="/home" component={Home} />
           <Route path="/profile" component={Profile} />
+          <Route path="/allposts" component={AllPosts} />
           <Route path="/">
             <Redirect to="/home" />
           </Route>

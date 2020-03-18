@@ -25,7 +25,7 @@ export const Register = () => {
   };
 
   return (
-    <div className="row mt-5">
+    <div className="row mt-5 mx-auto">
       <div className="col-md-6 m-auto">
         <div className="card card-body">
           <h1 className="text-center mb-3">

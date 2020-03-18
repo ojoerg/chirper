@@ -1,6 +1,5 @@
 const User = require("../models/User");
 const Session = require("../models/Session");
-const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const { setPassword } = require("./helper/passwordHashSalt");
 
@@ -9,12 +8,13 @@ const { setPassword } = require("./helper/passwordHashSalt");
 // @access     Public
 exports.getUsers = async (req, res, next) => {
   try {
-    const users = await User.find().select("username");
+    const users = await User.find().select("username -_id");
     return res.status(200).json({
       success: true,
       data: users
     });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({
       success: false,
       error: "Server Error"
@@ -29,12 +29,13 @@ exports.getUser = async (req, res, next) => {
   try {
     const { username } = req.body;
 
-    const user = await User.findOne({ username }).select("name username email");
+    const user = await User.findOne({ username }).select("name username email -_id");
     return res.status(200).json({
       success: true,
       data: user
     });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({
       success: false,
       error: "Server Error"
@@ -47,40 +48,56 @@ exports.getUser = async (req, res, next) => {
 // @access     Public
 exports.changeUser = async (req, res, next) => {
   try {
-    console.log(req.body);
     const { type, text, username } = req.body;
 
+    const sessionId = req.sessionID;
+    const session = await Session.findOne({ _id: sessionId });
+
+    if (!session) {
+      return res.status(400).json({
+        success: false,
+        error: "User not found"
+      });
+    } else if (username !== JSON.parse(session.session).username){
+      return res.status(401).json({
+        success: false,
+        error: "Usernames do not match"
+      });
+    }
+
     const user = await User.findOne({ username });
-    let newUser, newUsername;
+    let newUserUpdate, newUsername;
 
     if (!user) {
       return res.status(400).json({
         success: false,
-        error: "User not Found"
+        error: "User not found"
       });
     }
 
     switch (type) {
       case "name":
-        newUser = await User.updateOne({ username }, { name: text });
+        newUserUpdate = await User.updateOne({ username }, { name: text });
         break;
       case "email":
-        newUser = await User.updateOne({ username }, { email: text });
+        newUserUpdate = await User.updateOne({ username }, { email: text });
         break;
       case "password":
         const password = await setPassword(text[0]);
-        newUser = await User.updateOne({ username }, { password: password });
+        newUserUpdate = await User.updateOne({ username }, { password: password });
         break;
       case "username":
-        newUser = await User.updateOne({ username }, { username: text });
+        newUserUpdate = await User.updateOne({ username }, { username: text });
         break;
     }
-
+    
     type === "username" ? (newUsername = text) : (newUsername = username);
+    const newUser = await User.findOne({username: newUsername})
 
     return res.status(200).json({
       success: true,
-      username: newUsername
+      username: newUsername,
+      user: newUser
     });
   } catch (err) {
     console.log(err);
@@ -95,28 +112,45 @@ exports.changeUser = async (req, res, next) => {
 // @route      GET /api/v1/users
 // @access     Public
 exports.loginUser = (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (user === false) {
-      const message = info.error;
-      return res.status(401).json({
-        success: false,
-        error: message
-      });
-    }
+  passport.authenticate("local", async (err, user, info) => {
+    try {
+      if (user === false) {
+        const message = info.error;
+        return res.status(401).json({
+          success: false,
+          error: message
+        });
+      }
 
-    if (err) {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: "Server Error"
+        });
+      }
+
+      req.session.username = user.username;
+      const userFound = await User.findOne({ username: user.username });
+
+      if (!userFound) {
+        return res.status(500).json({
+          success: false,
+          error: "Server Error"
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        username: user.username,
+        follows: userFound.follows
+      });
+    } catch (err) {
+      console.log(err);
       return res.status(500).json({
         success: false,
         error: "Server Error"
       });
     }
-
-    req.session.username = user.username;
-
-    return res.status(200).json({
-      success: true,
-      username: user.username
-    });
   })(req, res, next);
 };
 
@@ -127,10 +161,22 @@ exports.authenticatedUser = async (req, res, next) => {
   try {
     const sessionId = req.sessionID;
     const session = await Session.findOne({ _id: sessionId });
-    if (session && JSON.parse(session.session).username) {
+
+    if (session) {
+      const username = JSON.parse(session.session).username;
+      const user = await User.findOne({ username });
+
+      if (!user) {
+        return res.status(500).json({
+          success: false,
+          error: "Server Error"
+        });
+      }
+
       return res.status(200).json({
         success: true,
-        username: JSON.parse(session.session).username
+        username: username,
+        follows: user.follows
       });
     } else {
       return res.status(401).json({
@@ -167,6 +213,7 @@ exports.addUser = async (req, res, next) => {
       message: "User successfully created"
     });
   } catch (err) {
+    console.log(err);
     if (err.name === "ValidationError") {
       const messages = Object.values(err.errors).map(val => val.message);
 
@@ -210,6 +257,45 @@ exports.logoutUser = async (req, res, next) => {
   }
 };
 
+// @desc       Add user to follow
+// @route      POST /api/v1/users/follow
+// @access     Public
+exports.followUser = async (req, res, next) => {
+  try {
+    const { username, userToFollow } = req.body;
+
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        error: "User not Found"
+      });
+    }
+    if (!user.follows.includes(userToFollow) && userToFollow !== username) {
+      user.follows = [...user.follows, userToFollow];
+    } else {
+      return res.status(400).json({
+        success: false,
+        error: "You already follow this user"
+      });
+    }
+
+    await User.updateOne({ username }, { follows: user.follows });
+
+    return res.status(200).json({
+      success: true,
+      data: userToFollow
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      success: false,
+      error: "Server Error"
+    });
+  }
+};
+
 // @desc       Delete User
 // @route      DELETE /api/v1/users/:username
 // @access     Public
@@ -227,10 +313,10 @@ exports.deleteUser = async (req, res, next) => {
     await user.remove();
 
     return res.status(200).json({
-      success: true,
-      data: {}
+      success: true
     });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({
       success: false,
       error: "Server Error"

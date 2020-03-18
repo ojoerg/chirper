@@ -8,8 +8,10 @@ const initialState = {
   popup: false,
   popupType: "",
   posts: [],
+  allPosts: false,
   users: [],
   user: {},
+  follows: [],
   error: null
 };
 
@@ -38,7 +40,8 @@ export const GlobalProvider = ({ children }) => {
       } else {
         dispatch({
           type: "AUTHENTICATE_USER",
-          username: response.username
+          username: response.username,
+          follows: response.follows
         });
       }
       await callback;
@@ -93,7 +96,8 @@ export const GlobalProvider = ({ children }) => {
         dispatch({
           type: "LOGIN_USER",
           msg: response.message,
-          username: response.username
+          username: response.username,
+          follows: response.follows
         });
       }
     } catch (err) {
@@ -108,6 +112,7 @@ export const GlobalProvider = ({ children }) => {
     try {
       const res = await fetch("api/v1/users/change", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json"
         },
@@ -122,7 +127,8 @@ export const GlobalProvider = ({ children }) => {
         dispatch({
           type: "CHANGE_USER",
           msg: response.message,
-          username: response.username
+          username: response.username,
+          user: response.user
         });
       }
     } catch (err) {
@@ -174,6 +180,29 @@ export const GlobalProvider = ({ children }) => {
       dispatch({
         type: "POSTS_ERROR",
         payload: err.response.data.error
+      });
+    }
+  }
+
+  async function getPostsFromFollowedUsers(user) {
+    try {
+      const res = await fetch("api/v1/posts/followed", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ "username": user })
+      });
+      const posts = await res.json();
+
+      dispatch({
+        type: "GET_POSTS_FROM_FOLLOWED_USERS",
+        payload: posts.data
+      });
+    } catch (err) {
+      dispatch({
+        type: "POSTS_FROM_FOLLOWED_USERS_ERROR",
+        payload: err
       });
     }
   }
@@ -230,6 +259,15 @@ export const GlobalProvider = ({ children }) => {
     });
   }
 
+  function toggleAllPosts(boolVal) {
+
+    dispatch({
+      type: "TOGGLE_ALLPOSTS",
+      allPosts: boolVal
+    });
+  }
+
+
   async function addPost(post) {
     try {
       const res = await fetch("api/v1/posts", {
@@ -253,6 +291,36 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  async function addFollow(user, userToFollow) {
+    try {
+      console.log(JSON.stringify({
+        "userToFollow": userToFollow,
+        "username": user
+      }))
+      const res = await fetch("api/v1/users/follow", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "userToFollow": userToFollow,
+          "username": user
+        })
+      });
+      const response = await res.json();
+
+      dispatch({
+        type: "ADD_FOLLOW",
+        payload: response.data
+      });
+    } catch (err) {
+      dispatch({
+        type: "FOLLOW_ERROR",
+        payload: err
+      });
+    }
+  }
+
   return (
     <GlobalContext.Provider
       value={{
@@ -262,15 +330,19 @@ export const GlobalProvider = ({ children }) => {
         popup: state.popup,
         popupType: state.popupType,
         posts: state.posts,
+        allPosts: state.allPosts,
         users: state.users,
         user: state.user,
+        follows: state.follows,
         error: state.error,
-        loading: state.loading,
         logoutUser,
         getPosts,
+        getPostsFromFollowedUsers,
         getUsers,
         getUser,
+        addFollow,
         togglePopup,
+        toggleAllPosts,
         addPost,
         checkAuthenticated,
         registerUser,
