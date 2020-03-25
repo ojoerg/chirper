@@ -42,21 +42,21 @@ export default (state, action) => {
     case "REGISTER_ERROR":
       return {
         ...state,
-        message: action.msg,
+        error: action.msg,
         loggedIn: false
       };
 
     case "LOGIN_ERROR":
       return {
         ...state,
-        message: action.msg,
+        error: action.msg,
         loggedIn: false
       };
 
     case "CHANGE_ERROR":
       return {
         ...state,
-        message: action.msg
+        error: action.msg
       };
 
     case "AUTHENTICATE_ERROR":
@@ -68,7 +68,7 @@ export default (state, action) => {
     case "LOGOUT_ERROR":
       return {
         ...state,
-        message: action.msg
+        error: action.msg
       };
 
     case "GET_POSTS":
@@ -100,13 +100,25 @@ export default (state, action) => {
         popup: action.popup,
         popupType: action.popupType
       };
-      
+
     case "TOGGLE_ALLPOSTS":
       return {
         ...state,
         allPosts: action.allPosts
       };
-      
+
+    case "CLEAR_MESSAGES":
+      return {
+        ...state,
+        message: ""
+      };
+
+    case "CLEAR_ERRORS":
+      return {
+        ...state,
+        error: ""
+      };
+
     case "ADD_POST":
       return {
         ...state,

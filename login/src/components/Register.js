@@ -1,26 +1,31 @@
 import React, { useState, useContext } from "react";
 import { GlobalContext } from "../context/GlobalState";
+import { MessagesAndErrors } from "./MessagesAndErrors";
 
 export const Register = () => {
-  const [name, setName] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
 
-  const { registerUser } = useContext(GlobalContext);
+  const { registerUser, clearMessages, clearErrors } = useContext(GlobalContext);
 
   const onSubmit = e => {
     e.preventDefault();
 
     const newUser = {
-      name: name,
+      firstname: firstname,
+      lastname: lastname,
       username: username,
       email: email,
       password: password,
       password2: password2
     };
 
+    clearMessages();
+    clearErrors();
     registerUser(newUser);
   };
 
@@ -31,17 +36,30 @@ export const Register = () => {
           <h1 className="text-center mb-3">
             <i className="fas fa-user-plus"></i> Register
           </h1>
+          <MessagesAndErrors />
           <form onSubmit={onSubmit}>
             <div className="form-group">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="firstname">Firstname</label>
               <input
                 type="text"
-                id="name"
-                name="name"
+                id="firstname"
+                name="firstname"
                 className="form-control"
-                placeholder="Enter Name"
-                value={name}
-                onChange={e => setName(e.target.value)}
+                placeholder="Enter Firstname"
+                value={firstname}
+                onChange={e => setFirstname(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="lastname">Lastname</label>
+              <input
+                type="text"
+                id="lastname"
+                name="lastname"
+                className="form-control"
+                placeholder="Enter Lastname"
+                value={lastname}
+                onChange={e => setLastname(e.target.value)}
               />
             </div>
             <div className="form-group">

@@ -12,7 +12,7 @@ const initialState = {
   users: [],
   user: {},
   follows: [],
-  error: null
+  error: ""
 };
 
 // Create context
@@ -68,7 +68,7 @@ export const GlobalProvider = ({ children }) => {
       } else {
         dispatch({
           type: "REGISTER_USER",
-          msg: "User successfully created"
+          msg: "User successfully created! => <a href='/login'>LOGIN</a>"
         });
       }
     } catch (err) {
@@ -95,15 +95,16 @@ export const GlobalProvider = ({ children }) => {
       } else {
         dispatch({
           type: "LOGIN_USER",
-          msg: response.message,
+          msg: "You successfully logged in!",
           username: response.username,
           follows: response.follows
         });
       }
     } catch (err) {
+      console.log(err)
       dispatch({
         type: "LOGIN_ERROR",
-        msg: err.data.error
+        msg: err
       });
     }
   }
@@ -123,10 +124,12 @@ export const GlobalProvider = ({ children }) => {
 
       if (response.error) {
         throw response.error;
+      } else if (dataToChange.type === "delete") {
+        logoutUser();
       } else {
         dispatch({
           type: "CHANGE_USER",
-          msg: response.message,
+          msg: "User updated successfully!",
           username: response.username,
           user: response.user
         });
@@ -260,10 +263,25 @@ export const GlobalProvider = ({ children }) => {
   }
 
   function toggleAllPosts(boolVal) {
-
+    clearMessages();
+    clearErrors();
     dispatch({
       type: "TOGGLE_ALLPOSTS",
       allPosts: boolVal
+    });
+  }
+
+  function clearMessages() {
+    dispatch({
+      type: "CLEAR_MESSAGES",
+      msg: ""
+    });
+  }
+
+  function clearErrors() {
+    dispatch({
+      type: "CLEAR_ERRORS",
+      msg: ""
     });
   }
 
@@ -343,6 +361,8 @@ export const GlobalProvider = ({ children }) => {
         addFollow,
         togglePopup,
         toggleAllPosts,
+        clearMessages,
+        clearErrors,
         addPost,
         checkAuthenticated,
         registerUser,

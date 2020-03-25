@@ -40,6 +40,9 @@ export const PageSwitch = () => {
         <Switch>
           <Route path="/" exact component={Welcome} />
           <Route path="/register" component={Register} />
+          <Route path="/profile">
+            <Redirect to="/" />
+          </Route>
           <Route path="/login" component={Login} />
           <Route path="/home">
             <Redirect to="/" />

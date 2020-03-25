@@ -1,11 +1,12 @@
 import React, { useState, useContext } from "react";
 import { GlobalContext } from "../context/GlobalState";
+import { MessagesAndErrors } from "./MessagesAndErrors";
 
 export const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const { loginUser } = useContext(GlobalContext);
+  const { loginUser, clearMessages, clearErrors } = useContext(GlobalContext);
 
   const onSubmit = e => {
     e.preventDefault();
@@ -15,6 +16,8 @@ export const Login = () => {
       password: password
     };
 
+    clearMessages();
+    clearErrors();
     loginUser(user);
   };
 
@@ -23,8 +26,10 @@ export const Login = () => {
       <div className="col-md-6 m-auto">
         <div className="card card-body">
           <h1 className="text-center mb-3">
-            <i className="fas fa-sign-in-alt"></i> Login
+            <i className="fas fa-sign-in-alt"></i>
+            Login
           </h1>
+          <MessagesAndErrors />
           <form onSubmit={onSubmit}>
             <div className="form-group">
               <label htmlFor="username">Username</label>

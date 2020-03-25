@@ -1,7 +1,9 @@
 const User = require("../models/User");
+const Post = require("../models/Post");
 const Session = require("../models/Session");
 const passport = require("passport");
 const { setPassword } = require("./helper/passwordHashSalt");
+const { comparePasswords } = require("./helper/comparePasswords");
 
 // @desc       Get all users
 // @route      GET /api/v1/users
@@ -29,7 +31,7 @@ exports.getUser = async (req, res, next) => {
   try {
     const { username } = req.body;
 
-    const user = await User.findOne({ username }).select("name username email -_id");
+    const user = await User.findOne({ username }).select("firstname lastname username email -_id");
     return res.status(200).json({
       success: true,
       data: user
@@ -48,7 +50,8 @@ exports.getUser = async (req, res, next) => {
 // @access     Public
 exports.changeUser = async (req, res, next) => {
   try {
-    const { type, text, username } = req.body;
+    const { type, username } = req.body;
+    const text = type !== "password" && type !== "delete" ? req.body.text : req.body.password;
 
     const sessionId = req.sessionID;
     const session = await Session.findOne({ _id: sessionId });
@@ -58,7 +61,7 @@ exports.changeUser = async (req, res, next) => {
         success: false,
         error: "User not found"
       });
-    } else if (username !== JSON.parse(session.session).username){
+    } else if (username !== JSON.parse(session.session).username) {
       return res.status(401).json({
         success: false,
         error: "Usernames do not match"
@@ -66,7 +69,7 @@ exports.changeUser = async (req, res, next) => {
     }
 
     const user = await User.findOne({ username });
-    let newUserUpdate, newUsername;
+    let newUsername;
 
     if (!user) {
       return res.status(400).json({
@@ -76,23 +79,58 @@ exports.changeUser = async (req, res, next) => {
     }
 
     switch (type) {
-      case "name":
-        newUserUpdate = await User.updateOne({ username }, { name: text });
+      case "firstname":
+        await User.updateOne({ username }, { firstname: text });
+        newUsername = username;
         break;
+
+      case "lastname":
+        await User.updateOne({ username }, { lastname: text });
+        newUsername = username;
+        break;
+
       case "email":
-        newUserUpdate = await User.updateOne({ username }, { email: text });
+        await User.updateOne({ username }, { email: text });
+        newUsername = username;
         break;
-      case "password":
-        const password = await setPassword(text[0]);
-        newUserUpdate = await User.updateOne({ username }, { password: password });
-        break;
+
       case "username":
-        newUserUpdate = await User.updateOne({ username }, { username: text });
+        await User.updateOne({ username }, { username: text });
+        await Post.updateMany({ username }, { username: text });
+
+        req.session.username = text;
+        await req.session.save();
+
+        newUsername = text;
         break;
+
+      case "password":
+        const passwordHashSalt = await setPassword(text);
+        await User.updateOne({ username }, { password: passwordHashSalt });
+        newUsername = username;
+        break;
+
+      case "delete":
+        const comparedPasswords = await comparePasswords(username, text);
+        if (comparedPasswords === true) {
+          await User.deleteOne({ username });
+          await Post.deleteMany({ username });
+          await req.logout(); //logout in passport (clear req.user)
+          await req.session.destroy(); // logout in express-session
+        } else {
+          throw err;
+        }
+
+        return res.status(200).json({
+          success: true,
+          user: "deleted"
+        });
+
+      default:
+        throw err;
     }
-    
-    type === "username" ? (newUsername = text) : (newUsername = username);
-    const newUser = await User.findOne({username: newUsername})
+
+    const newUser = await User.findOne({ username: newUsername });
 
     return res.status(200).json({
       success: true,
@@ -198,11 +236,12 @@ exports.authenticatedUser = async (req, res, next) => {
 exports.addUser = async (req, res, next) => {
   try {
     //const user = await User.create(req.body);
-    const { name, username, email, password, password2 } = req.body;
+    const { firstname, lastname, username, email, password, password2 } = req.body;
     const hashSaltPassword = await setPassword(password);
 
     const user = await User.create({
-      name: name,
+      firstname: firstname,
+      lastname: lastname,
       username: username,
       email: email,
       password: hashSaltPassword

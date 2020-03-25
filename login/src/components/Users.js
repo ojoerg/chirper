@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { GlobalContext } from "../context/GlobalState";
+import { MessagesAndErrors } from "./MessagesAndErrors";
 
 export const Users = props => {
   const { users, getUsers, addFollow, username, togglePopup } = useContext(GlobalContext);
@@ -18,12 +19,12 @@ export const Users = props => {
     props.setPopupRemovable(true);
   };
 
-  const hrAdder = (index) => {
-    if (index < users.length - 1){
+  const hrAdder = index => {
+    if (index < users.length - 1) {
       return <hr></hr>;
     }
     return;
-  }
+  };
 
   return (
     <div
@@ -36,18 +37,23 @@ export const Users = props => {
             <h4 className="nav-link">Users</h4>
           </li>
           <li className="nav-item">
-            <button className="btn btn-link nav-link" onClick={() => removePopupButton()}>
+            <button
+              className="btn btn-link nav-link text-danger"
+              onClick={() => removePopupButton()}>
               <i className="fas fa-times-circle fa-2x"></i>
             </button>
           </li>
         </ul>
       </div>
+
+      <MessagesAndErrors />
       <div className="card card-body">
         {users.map((user, index) => {
           if (user.username !== username) {
-              return (
-                <div>
-                <div className="d-flex justify-content-between align-items-center" key={user.username}>
+            return (
+              <div key={user.username}>
+                <div
+                  className="d-flex justify-content-between align-items-center">
                   <a className="" href={"/user/" + user.username}>
                     {user.username}
                   </a>
@@ -56,10 +62,10 @@ export const Users = props => {
                     onClick={() => follow(user.username)}>
                     <i className="fas fa-plus-circle"></i> Follow
                   </button>
-                  </div>
-                  {hrAdder(index)}
                 </div>
-              );
+                {hrAdder(index)}
+              </div>
+            );
           } else {
             return null;
           }
