@@ -6,9 +6,11 @@ const session = require("express-session");
 const passport = require("passport");
 const morgan = require("morgan");
 const MongoStore = require("connect-mongo")(session);
+const fileUpload = require("express-fileupload");
 
 const posts = require("./routes/posts");
 const users = require("./routes/users");
+const files = require("./routes/files");
 
 dotenv.config({ path: "./config/config.env" });
 
@@ -20,6 +22,9 @@ const app = express();
 app.disable("x-powered-by");
 
 app.use(morgan("common"));
+app.use(express.static(path.join(__dirname, '/UserFiles')));
+
+app.use(fileUpload());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -49,6 +54,7 @@ app.use(passport.session());
 // Routes
 app.use("/api/v1/posts", posts);
 app.use("/api/v1/users", users);
+app.use("/api/v1/files", files);
 app.use("/test", require("./routes/test"));
 
 if (process.env.NODE_ENV === "production") {

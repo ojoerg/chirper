@@ -14,7 +14,7 @@ export const NotFound = () => {
   return (
     <div className="text-center">
       {redirect ? (
-        <Redirect to="/" />
+        <Redirect to="/home" />
       ) : (
         <div className="mt-5 pt-5">
           <h1 className="mt-5 pt-5">Sorry, page not found</h1>

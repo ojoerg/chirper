@@ -8,6 +8,41 @@ const arraySort = require("array-sort");
 exports.getPosts = async (req, res, next) => {
   try {
     const posts = await Post.find({}, null, { sort: { created: -1 } });
+
+    if (!posts) {
+      return res.status(400).json({
+        success: false,
+        error: "No Posts Found"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: posts
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: "Server Error"
+    });
+  }
+};
+
+// @desc       Get all posts from one User
+// @route      POST /api/v1/posts/user
+// @access     Public
+exports.getPostsFromUser = async (req, res, next) => {
+  try {
+    const { username } = req.body;
+    const posts = await Post.find({ username }, null, { sort: { created: -1 } });
+
+    if (!posts) {
+      return res.status(400).json({
+        success: false,
+        error: "No Posts Found"
+      });
+    }
+
     return res.status(200).json({
       success: true,
       data: posts

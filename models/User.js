@@ -26,7 +26,12 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  follows: []
+  follows: [],
+  profilePicture: {
+    type: String,
+    required: true,
+    default: "default.png"
+  }
 });
 
 const User = mongoose.model('User', UserSchema);

@@ -1,12 +1,20 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { HeaderProfile } from "./HeaderProfile";
 import { GlobalContext } from "../context/GlobalState";
 import { MessagesAndErrors } from "./MessagesAndErrors";
 
 export const Profile = () => {
-  const { username, changeUserProperty, getUser, user, clearMessages, clearErrors } = useContext(
-    GlobalContext
-  );
+  const {
+    username,
+    changeUserProperty,
+    getUser,
+    user,
+    clearMessages,
+    clearErrors,
+    filePath,
+    getFile,
+    uploadFile
+  } = useContext(GlobalContext);
   const [newFirstname, setNewFirstname] = useState("");
   const [newLastname, setNewLastname] = useState("");
   const [newEmail, setNewEmail] = useState("");
@@ -15,11 +23,14 @@ export const Profile = () => {
   const [newPassword2, setNewPassword2] = useState("");
   const [deletePassword, setDeletePassword] = useState("");
   const [deletePassword2, setDeletePassword2] = useState("");
+  const [profilePicture, setProfilePicture] = useState(null);
+  const profilePictureRef = useRef(null);
 
   useEffect(() => {
     clearMessages();
     clearErrors();
     getUser(username);
+    getFile("profilePicture", username);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // empty array for no loop
 
@@ -83,6 +94,24 @@ export const Profile = () => {
     clearErrors();
   };
 
+  const profilePictureUpload = e => {
+    e.preventDefault();
+
+    let imageFormData = new FormData();
+    imageFormData.append("username", username);
+    imageFormData.append("type", "profilePicture");
+    imageFormData.append("oldFile", filePath);
+    imageFormData.append("profilePicture", profilePicture);
+
+    clearMessages();
+    clearErrors();
+    uploadFile(imageFormData);
+  };
+
+  const simulateClickOnProfilePictureInput = () => {
+    profilePictureRef.current.click();
+  }
+
   return (
     <>
       <HeaderProfile />
@@ -95,6 +124,43 @@ export const Profile = () => {
           </div>
           <MessagesAndErrors />
           <div className="card-body">
+            <div className="ml-3 mb-2">Current profile picture</div>
+
+            <form onSubmit={profilePictureUpload}>
+              <img
+                src={"http://localhost:5000" + filePath}
+                alt="profile img"
+                className="img-thumbnail col-md-5 ml-3 mb-2 profile-picture"
+                onClick={() => simulateClickOnProfilePictureInput()}
+              />
+              <div className="ml-3 mb-2">Upload your profile picture</div>
+              <div className="form-group input-group col-md-10">
+                <div className="custom-file">
+                  <label className="custom-file-label" htmlFor="profilePicture">
+                    Choose file
+                  </label>
+                  <input
+                    type="file"
+                    id="profilePicture"
+                    name="profilePicture"
+                    className="custom-file-input"
+                    placeholder="Choose file"
+                    files={profilePicture}
+                    onChange={e => setProfilePicture(e.target.files[0])}
+                    ref={profilePictureRef}
+                  />
+
+                  <div className="input-group-append">
+                    <a href="profile">
+                      <button type="submit" className="btn btn-primary">
+                        Upload
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <hr />
             <form onSubmit={onSubmit("firstname")}>
               <div className="form-group col-md-10">
                 <label htmlFor="newFirstname">Current Firstname: {user.firstname}</label>

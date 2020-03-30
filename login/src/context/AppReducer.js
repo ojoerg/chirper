@@ -39,6 +39,12 @@ export default (state, action) => {
         username: ""
       };
 
+    case "GET_FILE":
+      return {
+        ...state,
+        filePath: action.filePath
+      };
+
     case "REGISTER_ERROR":
       return {
         ...state,
@@ -122,14 +128,21 @@ export default (state, action) => {
     case "ADD_POST":
       return {
         ...state,
-        posts: [...state.posts, action.payload]
+        posts: [...state.posts, action.payload],
+        message: action.message
       };
 
     case "ADD_FOLLOW":
       return {
         ...state,
-        follows: [...state.follows, action.payload]
+        follows: [...state.follows, action.payload],
+        message: action.message
       };
+      case "UPLOAD_FILE":
+        return {
+          ...state,
+          filePath: action.payload
+        };
 
     case "POSTS_ERROR":
       return {
@@ -154,7 +167,14 @@ export default (state, action) => {
         ...state,
         error: action.payload
       };
+
     case "USER_ERROR":
+      return {
+        ...state,
+        error: action.payload
+      };
+
+    case "GET_FILE_ERROR":
       return {
         ...state,
         error: action.payload
