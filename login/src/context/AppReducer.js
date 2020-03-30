@@ -138,11 +138,12 @@ export default (state, action) => {
         follows: [...state.follows, action.payload],
         message: action.message
       };
-      case "UPLOAD_FILE":
-        return {
-          ...state,
-          filePath: action.payload
-        };
+
+    case "UPLOAD_FILE":
+      return {
+        ...state,
+        filePath: action.payload
+      };
 
     case "POSTS_ERROR":
       return {
@@ -175,6 +176,12 @@ export default (state, action) => {
       };
 
     case "GET_FILE_ERROR":
+      return {
+        ...state,
+        error: action.payload
+      };
+
+    case "UPLOAD_ERROR":
       return {
         ...state,
         error: action.payload

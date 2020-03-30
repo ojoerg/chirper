@@ -11,9 +11,49 @@ const { comparePasswords } = require("./helper/comparePasswords");
 // @access     Public
 exports.fileUpload = async (req, res, next) => {
   try {
+    const { username, type, oldFile } = req.body;
+    if (!req.files) {
+      return res.status(400).json({
+        success: false,
+        error: "Please provide a file!"
+      });
+    }
+
     const file = req.files.profilePicture ? req.files.profilePicture : req.files.file;
 
-    const { username, oldFile } = req.body;
+    console.log(type);
+
+    if (
+      type === "profilePicture" &&
+      file.mimetype !== "image/png" &&
+      file.mimetype !== "image/jpeg" &&
+      file.mimetype !== "image/gif"
+    ) {
+      return res.status(400).json({
+        success: false,
+        error: "Wrong filetype provided!"
+      });
+    } else if (
+      type === "post" &&
+      !file.mimetype !== "image/png" &&
+      !file.mimetype !== "image/jpeg" &&
+      !file.mimetype !== "image/gif" &&
+      !file.mimetype !== "video/mpeg" &&
+      !file.mimetype !== "video/mp4" &&
+      !file.mimetype !== "video/ogg"
+    ) {
+      return res.status(400).json({
+        success: false,
+        error: "Wrong filetype provided!"
+      });
+    } else if (file.size > 10485760) {
+      //10 MB
+      return res.status(400).json({
+        success: false,
+        error: "File too big!"
+      });
+    }
+
     //const fileType = file;
     const fileName =
       Math.random()
@@ -22,13 +62,13 @@ exports.fileUpload = async (req, res, next) => {
 
     console.log(req.files);
 
-    await file.mv("./UserFiles/ProfileImages/" + fileName);
+    await file.mv("./UserFiles/ProfilePictures/" + fileName);
     await User.updateOne({ username }, { profilePicture: fileName });
 
     await fs.unlinkSync("./UserFiles" + oldFile);
     return res.status(200).json({
       success: true,
-      data: "/ProfileImages/" + fileName
+      data: "/ProfilePictures/" + fileName
     });
   } catch (err) {
     console.log(err);
@@ -57,7 +97,7 @@ exports.filePath = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
-      path: "/ProfileImages/" + user.profilePicture
+      path: "/ProfilePictures/" + user.profilePicture
     });
   } catch (err) {
     console.log(err);

@@ -185,6 +185,8 @@ exports.loginUser = (req, res, next) => {
         });
       }
 
+      console.log(user.username, userFound.follows)
+
       return res.status(200).json({
         success: true,
         username: user.username,

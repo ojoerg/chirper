@@ -137,14 +137,13 @@ export const Profile = () => {
               <div className="form-group input-group col-md-10">
                 <div className="custom-file">
                   <label className="custom-file-label" htmlFor="profilePicture">
-                    Choose file
+                    {profilePicture ? profilePicture.name : "Choose file"}
                   </label>
                   <input
                     type="file"
                     id="profilePicture"
                     name="profilePicture"
                     className="custom-file-input"
-                    placeholder="Choose file"
                     files={profilePicture}
                     onChange={e => setProfilePicture(e.target.files[0])}
                     ref={profilePictureRef}

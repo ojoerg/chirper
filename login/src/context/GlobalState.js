@@ -98,8 +98,8 @@ export const GlobalProvider = ({ children }) => {
         dispatch({
           type: "LOGIN_USER",
           msg: "You successfully logged in!",
-          username: res.username,
-          follows: res.follows
+          username: response.username,
+          follows: response.follows
         });
       }
     } catch (err) {
@@ -393,9 +393,6 @@ export const GlobalProvider = ({ children }) => {
     try {
       const res = await fetch("/api/v1/files/upload", {
         method: "POST",
-        // headers: {
-        //   "Content-Type": "application/json"
-        // },
         body: formData
       });
       const response = await res.json();
