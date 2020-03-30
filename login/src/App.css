@@ -36,6 +36,15 @@
   cursor: pointer;
 }
 
+.vertical-line-header {
+  border: 1px solid #fff; 
+}
+
+.user-picture {
+  height: 40px;
+  width: 40px;
+}
+
 @media (min-width: 1200px) {
   .container {
     width: 700px;

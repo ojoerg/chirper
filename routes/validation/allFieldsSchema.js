@@ -9,7 +9,8 @@ const firstAndLastname = Joi.string()
   .messages({
     "string.base": "This name is not allowed",
     "string.empty": "Please enter a name",
-    "string.pattern": 'Please enter only the following characters: " A-Z, a-z, -, \' " or space',
+    "string.pattern.base":
+      'Please enter only the following characters: " A-Z, a-z, -, \' " or space',
     "string.min": "Please enter a name with at least 2 characters",
     "string.max": "Please enter a name with at most 40 characters",
     "string.required": "Please enter a name (required)"
@@ -62,6 +63,34 @@ const password2 = Joi.string()
     "string.required": "Passwords don't match"
   });
 
+const type = Joi.string()
+  .pattern(/profilePicture|post/)
+  .required()
+  .messages({
+    "string.base": "This type is not allowed",
+    "string.empty": "This type is not allowed",
+    "string.pattern.base": "This type is not allowed",
+    "string.required": "This type is not allowed"
+  });
+
+const oldFile = Joi.string()
+  .pattern(
+    /^\/ProfilePictures\/[a-z0-9]+\.(png|jpeg|jpg|gif|mpeg|mpg|mp4|ogg|PNG|JPEG|JPG|GIF|MPEG|MPG|MP4|OGG)$/
+  )
+  .messages({
+    "string.base": "Wrong filename for previous profile picture provided",
+    "string.empty": "Wrong filename for previous profile picture provided",
+    "string.pattern.base": "Wrong filename for previous profile picture provided"
+  });
+
+const text = Joi.string()
+  .required()
+  .messages({
+    "string.base": "This text is not allowed",
+    "string.empty": "Please enter text",
+    "string.required": "Please enter text (required)"
+  });
+
 exports.registerSchema = Joi.object({
   firstname: firstAndLastname,
   lastname: firstAndLastname,
@@ -90,4 +119,19 @@ exports.usernameSchema = Joi.object({
 exports.passwordSchema = Joi.object({
   password: password,
   password2: password2
+});
+
+exports.addPostSchema = Joi.object({
+  username: username,
+  text: text
+});
+
+exports.fileSchema = Joi.object({
+  username: username,
+  type: type,
+  oldFile: oldFile
+});
+
+exports.getPostsSchema = Joi.object({
+  username: username
 });

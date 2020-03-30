@@ -4,7 +4,7 @@ import { MessagesAndErrors } from "./MessagesAndErrors";
 
 export const CreatePost = props => {
   const [text, setText] = useState("");
-  const { addPost, togglePopup, username, clearMessages, clearErrors } = useContext(GlobalContext);
+  const { addPost, togglePopup, username, clearMessages, clearErrors, getPosts } = useContext(GlobalContext);
 
   const onSubmit = e => {
     e.preventDefault();
@@ -17,6 +17,7 @@ export const CreatePost = props => {
     clearMessages();
     clearErrors();
     addPost(newPost);
+    getPosts();
     togglePopup(false);
   };
 

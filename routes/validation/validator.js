@@ -4,7 +4,10 @@ const {
   lastnameSchema,
   emailSchema,
   usernameSchema,
-  passwordSchema
+  passwordSchema,
+  fileSchema,
+  addPostSchema,
+  getPostsSchema
 } = require("./allFieldsSchema");
 const { loginSchema } = require("./loginSchema");
 const { sessionCookieSchema } = require("./sessionCookieSchema");
@@ -64,5 +67,35 @@ exports.profileValidator = (req, res, next) => {
   }
 
   if (result.error) return res.status(400).json({ error: result.error.details[0].message });
+  next();
+};
+
+exports.fileValidator = (req, res, next) => {
+  const { error } = fileSchema.validate(req.body, { abortEarly: false });
+  if (error) return res.status(400).json({ error: error.details[0].message });
+  next();
+};
+
+exports.addPostValidator = (req, res, next) => {
+  const { error } = addPostSchema.validate(req.body, { abortEarly: false });
+  if (error) return res.status(400).json({ error: error.details[0].message });
+  next();
+};
+
+exports.addPostValidator = (req, res, next) => {
+  const { error } = addPostSchema.validate(req.body, { abortEarly: false });
+  if (error) return res.status(400).json({ error: error.details[0].message });
+  next();
+};
+
+exports.addPostValidator = (req, res, next) => {
+  const { error } = addPostSchema.validate(req.body, { abortEarly: false });
+  if (error) return res.status(400).json({ error: error.details[0].message });
+  next();
+};
+
+exports.getPostsValidator = (req, res, next) => {
+  const { error } = getPostsSchema.validate(req.body, { abortEarly: false });
+  if (error) return res.status(400).json({ error: error.details[0].message });
   next();
 };

@@ -19,6 +19,7 @@ export const Posts = () => {
 
   return (
     <>
+      <h4 className="text-center mt-3">{allPosts ? "All Posts" : "Posts from followed users"}</h4>
       {posts.map(postObject => {
         let date = new Date(postObject.created);
         return (

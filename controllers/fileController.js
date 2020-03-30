@@ -21,8 +21,6 @@ exports.fileUpload = async (req, res, next) => {
 
     const file = req.files.profilePicture ? req.files.profilePicture : req.files.file;
 
-    console.log(type);
-
     if (
       type === "profilePicture" &&
       file.mimetype !== "image/png" &&
@@ -54,18 +52,19 @@ exports.fileUpload = async (req, res, next) => {
       });
     }
 
-    //const fileType = file;
     const fileName =
       Math.random()
         .toString(36)
         .substr(2, 15) + file.mimetype.replace(/.*\/(.*)$/, "." + "$1");
 
-    console.log(req.files);
 
     await file.mv("./UserFiles/ProfilePictures/" + fileName);
     await User.updateOne({ username }, { profilePicture: fileName });
 
-    await fs.unlinkSync("./UserFiles" + oldFile);
+    if (oldFile && /default\.png/.test(oldFile) === false) {
+      await fs.unlinkSync("./UserFiles" + oldFile);
+    }
+
     return res.status(200).json({
       success: true,
       data: "/ProfilePictures/" + fileName

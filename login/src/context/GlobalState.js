@@ -188,7 +188,7 @@ export const GlobalProvider = ({ children }) => {
     } catch (err) {
       dispatch({
         type: "POSTS_ERROR",
-        payload: err.res.data.error
+        payload: "Posts could not be retrieved!"
       });
     }
   }
@@ -236,7 +236,7 @@ export const GlobalProvider = ({ children }) => {
     } catch (err) {
       dispatch({
         type: "USERS_ERROR",
-        payload: err.res.data.error
+        payload: "Users could not be retrieved!"
       });
     }
   }
@@ -338,7 +338,7 @@ export const GlobalProvider = ({ children }) => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(user)
+        body: JSON.stringify({ "username": user})
       });
       const response = await res.json();
 
@@ -347,7 +347,7 @@ export const GlobalProvider = ({ children }) => {
       } else {
         dispatch({
           type: "GET_POSTS",
-          posts: response.data
+          payload: response.data
         });
       }
     } catch (err) {

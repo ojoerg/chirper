@@ -110,11 +110,12 @@ export const Profile = () => {
 
   const simulateClickOnProfilePictureInput = () => {
     profilePictureRef.current.click();
-  }
+  };
 
   return (
     <>
       <HeaderProfile />
+      <MessagesAndErrors />
       <div className="row mt-5 mx-auto">
         <div className="card col-md-6 m-auto pl-0 pr-0">
           <div className="bg-primary text-light card-header">
@@ -122,13 +123,17 @@ export const Profile = () => {
               Profil of {user.username} ({user.firstname} {user.lastname})
             </h1>
           </div>
-          <MessagesAndErrors />
           <div className="card-body">
+            <div className="ml-3 mb-2">
+              Link to public profile: <a href={`/user/${username}`}>Click</a>
+            </div>
+            <hr />
+
             <div className="ml-3 mb-2">Current profile picture</div>
 
             <form onSubmit={profilePictureUpload}>
               <img
-                src={"http://localhost:5000" + filePath}
+                src={`http://${process.env.REACT_APP_HOSTNAME}` + filePath}
                 alt="profile img"
                 className="img-thumbnail col-md-5 ml-3 mb-2 profile-picture"
                 onClick={() => simulateClickOnProfilePictureInput()}

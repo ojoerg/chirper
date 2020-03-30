@@ -14,6 +14,8 @@ export const HeaderHome = () => {
           Chirper
         </h1>
       </a>
+      <ul className="nav justify-content-between">
+      <li className="nav-item">
       {allPosts ? (
         <Link
           to="/home"
@@ -31,7 +33,7 @@ export const HeaderHome = () => {
           All Posts
         </Link>
       )}
-      <ul className="nav justify-content-between">
+      </li>
         <li className="nav-item">
           <button
             type="button"

@@ -151,6 +151,12 @@ export default (state, action) => {
         error: action.payload
       };
 
+    case "POST_ERROR":
+      return {
+        ...state,
+        error: action.payload
+      };
+
     case "POSTS_FROM_FOLLOWED_USERS_ERROR":
       return {
         ...state,

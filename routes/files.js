@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const { fileUpload, filePath } = require("../controllers/fileController");
-const {} = require("./validation/validator");
+const { fileValidator } = require("./validation/validator");
 
 // Upload file
 router
   .route("/upload")
-  .post(fileUpload);
+  .post(fileValidator, fileUpload);
 
 // Get Path to file
 router
