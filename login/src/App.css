@@ -32,6 +32,10 @@
     max-width: 700px;
 }
 
+.toast {
+  font-size: 1.1rem;
+}
+
 .profile-picture:hover {
   cursor: pointer;
 }

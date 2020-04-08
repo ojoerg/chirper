@@ -50,7 +50,7 @@ export const User = () => {
                 <tr>
                   <th scope="row">Posts:</th>
                   <td>
-                    {!posts || posts === [] ? (
+                    {!posts || posts.length === 0 ? (
                       <p>No Posts from {user.username}</p>
                     ) : (
                       posts.map(postObject => {

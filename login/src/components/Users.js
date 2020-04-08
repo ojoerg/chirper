@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { GlobalContext } from "../context/GlobalState";
 import { MessagesAndErrors } from "./MessagesAndErrors";
+import { LineAdder } from './LineAdder';
 
 export const Users = props => {
   const { users, getUsers, addFollow, username, togglePopup } = useContext(GlobalContext);
@@ -17,13 +18,6 @@ export const Users = props => {
   const removePopupButton = () => {
     togglePopup(false);
     props.setPopupRemovable(true);
-  };
-
-  const hrAdder = index => {
-    if (index < users.length - 1) {
-      return <hr></hr>;
-    }
-    return;
   };
 
   return (
@@ -63,7 +57,7 @@ export const Users = props => {
                     <i className="fas fa-plus-circle"></i> Follow
                   </button>
                 </div>
-                {hrAdder(index)}
+                <LineAdder index={index} userLength={users.length} />
               </div>
             );
           } else {

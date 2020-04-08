@@ -6,7 +6,7 @@ export default (state, action) => {
         message: action.msg,
         loggedIn: true,
         username: action.username,
-        follows: action.follows
+        follows: action.follows,
       };
 
     case "CHANGE_USER":
@@ -14,7 +14,7 @@ export default (state, action) => {
         ...state,
         username: action.username,
         user: action.user,
-        message: action.msg
+        message: action.msg,
       };
 
     case "AUTHENTICATE_USER":
@@ -22,175 +22,199 @@ export default (state, action) => {
         ...state,
         loggedIn: true,
         username: action.username,
-        follows: action.follows
+        follows: action.follows,
       };
 
     case "REGISTER_USER":
       return {
         ...state,
         message: action.msg,
-        loggedIn: false
+        loggedIn: false,
       };
 
     case "LOGOUT_USER":
       return {
         ...state,
         loggedIn: false,
-        username: ""
+        username: "",
       };
 
     case "GET_FILE":
       return {
         ...state,
-        filePath: action.filePath
+        filePath: action.filePath,
       };
 
     case "REGISTER_ERROR":
       return {
         ...state,
         error: action.msg,
-        loggedIn: false
+        loggedIn: false,
       };
 
     case "LOGIN_ERROR":
       return {
         ...state,
         error: action.msg,
-        loggedIn: false
+        loggedIn: false,
       };
 
     case "CHANGE_ERROR":
       return {
         ...state,
-        error: action.msg
+        error: action.msg,
       };
 
     case "AUTHENTICATE_ERROR":
       return {
         ...state,
-        loggedIn: false
+        loggedIn: false,
       };
 
     case "LOGOUT_ERROR":
       return {
         ...state,
-        error: action.msg
+        error: action.msg,
       };
 
     case "GET_POSTS":
       return {
         ...state,
-        posts: action.payload
+        posts: action.payload,
       };
 
     case "GET_POSTS_FROM_FOLLOWED_USERS":
       return {
         ...state,
-        posts: action.payload
+        posts: action.payload,
       };
 
     case "GET_USERS":
       return {
         ...state,
-        users: action.payload
+        users: action.payload,
       };
     case "GET_USER":
       return {
         ...state,
-        user: action.payload
+        user: action.payload,
       };
 
     case "TOGGLE_POPUP":
       return {
         ...state,
         popup: action.popup,
-        popupType: action.popupType
+        popupType: action.popupType,
       };
 
     case "TOGGLE_ALLPOSTS":
       return {
         ...state,
-        allPosts: action.allPosts
+        allPosts: action.allPosts,
       };
 
     case "CLEAR_MESSAGES":
       return {
         ...state,
-        message: ""
+        message: "",
       };
 
     case "CLEAR_ERRORS":
       return {
         ...state,
-        error: ""
+        error: "",
       };
 
     case "ADD_POST":
       return {
         ...state,
         posts: [...state.posts, action.payload],
-        message: action.message
+        message: action.message,
+      };
+
+    case "ADD_ANSWER":
+      return {
+        ...state,
+        message: action.message,
       };
 
     case "ADD_FOLLOW":
       return {
         ...state,
         follows: [...state.follows, action.payload],
-        message: action.message
+        message: action.message,
       };
 
     case "UPLOAD_FILE":
       return {
         ...state,
-        filePath: action.payload
+        filePath: action.payload,
+      };
+
+    case "ADD_REMOVE_LIKE":
+      return {
+        ...state,
+        likeAddedRemoved: action.payload,
       };
 
     case "POSTS_ERROR":
       return {
         ...state,
-        error: action.payload
+        error: action.payload,
       };
 
     case "POST_ERROR":
       return {
         ...state,
-        error: action.payload
+        error: action.payload,
+      };
+
+    case "ANSWER_ERROR":
+      return {
+        ...state,
+        error: action.payload,
       };
 
     case "POSTS_FROM_FOLLOWED_USERS_ERROR":
       return {
         ...state,
-        error: action.payload
+        error: action.payload,
       };
 
     case "FOLLOW_ERROR":
       return {
         ...state,
-        error: action.payload
+        error: action.payload,
       };
 
     case "USERS_ERROR":
       return {
         ...state,
-        error: action.payload
+        error: action.payload,
       };
 
     case "USER_ERROR":
       return {
         ...state,
-        error: action.payload
+        error: action.payload,
       };
 
     case "GET_FILE_ERROR":
       return {
         ...state,
-        error: action.payload
+        error: action.payload,
       };
 
     case "UPLOAD_ERROR":
       return {
         ...state,
-        error: action.payload
+        error: action.payload,
+      };
+
+    case "LIKE_ERROR":
+      return {
+        ...state,
+        error: action.payload,
       };
 
     default:

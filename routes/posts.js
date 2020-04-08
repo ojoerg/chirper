@@ -5,7 +5,9 @@ const {
   getPostsFromUser,
   addPost,
   getFollowedPosts,
-  deletePost
+  addRemoveLike,
+  deletePost,
+  addAnswer
 } = require("../controllers/postController");
 const { addPostValidator, getPostsValidator } = require("./validation/validator");
 
@@ -17,6 +19,9 @@ router
 router.route("/user").post(getPostsValidator, getPostsFromUser);
 
 router.route("/followed").post(getPostsValidator, getFollowedPosts);
+
+router.route("/like").post(addRemoveLike);
+router.route("/answer").post(addAnswer);
 
 router.route("/:id").delete(deletePost);
 

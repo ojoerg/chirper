@@ -13,7 +13,8 @@ const initialState = {
   user: {},
   follows: [],
   error: "",
-  filePath: ""
+  filePath: "",
+  likeAddedRemoved: false,
 };
 
 // Create context
@@ -27,7 +28,7 @@ export const GlobalProvider = ({ children }) => {
   async function checkAuthenticated(callback) {
     try {
       const res = await fetch("/api/v1/users/authenticated", {
-        credentials: "include"
+        credentials: "include",
       });
       const response = await res.json();
 
@@ -36,20 +37,20 @@ export const GlobalProvider = ({ children }) => {
       } else if (response.success === false) {
         dispatch({
           type: "AUTHENTICATE_ERROR",
-          msg: "Authentication error"
+          msg: "Authentication error",
         });
       } else {
         dispatch({
           type: "AUTHENTICATE_USER",
           username: response.username,
-          follows: response.follows
+          follows: response.follows,
         });
       }
       await callback;
     } catch (err) {
       dispatch({
         type: "AUTHENTICATE_ERROR",
-        msg: err
+        msg: err,
       });
     }
   }
@@ -59,9 +60,9 @@ export const GlobalProvider = ({ children }) => {
       const res = await fetch("/api/v1/users/register", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(user)
+        body: JSON.stringify(user),
       });
       const response = await res.json();
 
@@ -70,13 +71,13 @@ export const GlobalProvider = ({ children }) => {
       } else {
         dispatch({
           type: "REGISTER_USER",
-          msg: "User successfully created! => <a href='/login'>LOGIN</a>"
+          msg: "User successfully created! => <a href='/login'>LOGIN</a>",
         });
       }
     } catch (err) {
       dispatch({
         type: "REGISTER_ERROR",
-        msg: err
+        msg: err,
       });
     }
   }
@@ -86,9 +87,9 @@ export const GlobalProvider = ({ children }) => {
       const res = await fetch("/api/v1/users/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(user)
+        body: JSON.stringify(user),
       });
       const response = await res.json();
 
@@ -99,14 +100,14 @@ export const GlobalProvider = ({ children }) => {
           type: "LOGIN_USER",
           msg: "You successfully logged in!",
           username: response.username,
-          follows: response.follows
+          follows: response.follows,
         });
       }
     } catch (err) {
       console.log(err);
       dispatch({
         type: "LOGIN_ERROR",
-        msg: err
+        msg: err,
       });
     }
   }
@@ -117,9 +118,9 @@ export const GlobalProvider = ({ children }) => {
         method: "POST",
         credentials: "include",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(dataToChange)
+        body: JSON.stringify(dataToChange),
       });
 
       const response = await res.json();
@@ -133,13 +134,13 @@ export const GlobalProvider = ({ children }) => {
           type: "CHANGE_USER",
           msg: "User updated successfully!",
           username: response.username,
-          user: response.user
+          user: response.user,
         });
       }
     } catch (err) {
       dispatch({
         type: "CHANGE_ERROR",
-        msg: err
+        msg: err,
       });
     }
   }
@@ -147,7 +148,7 @@ export const GlobalProvider = ({ children }) => {
   async function logoutUser() {
     try {
       const res = await fetch("/api/v1/users/logout", {
-        credentials: "include"
+        credentials: "include",
       });
       const response = await res.json();
 
@@ -156,18 +157,18 @@ export const GlobalProvider = ({ children }) => {
       } else if (response.success === false) {
         dispatch({
           type: "LOGOUT_ERROR",
-          msg: "Logout Error"
+          msg: "Logout Error",
         });
       } else {
         dispatch({
           type: "LOGOUT_USER",
-          username: ""
+          username: "",
         });
       }
     } catch (err) {
       dispatch({
         type: "LOGOUT_ERROR",
-        msg: err
+        msg: err,
       });
     }
   }
@@ -182,13 +183,13 @@ export const GlobalProvider = ({ children }) => {
       } else {
         dispatch({
           type: "GET_POSTS",
-          payload: posts.data
+          payload: posts.data,
         });
       }
     } catch (err) {
       dispatch({
         type: "POSTS_ERROR",
-        payload: "Posts could not be retrieved!"
+        payload: "Posts could not be retrieved!",
       });
     }
   }
@@ -198,9 +199,9 @@ export const GlobalProvider = ({ children }) => {
       const res = await fetch("/api/v1/posts/followed", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: user })
+        body: JSON.stringify({ username: user }),
       });
       const posts = await res.json();
 
@@ -209,13 +210,13 @@ export const GlobalProvider = ({ children }) => {
       } else {
         dispatch({
           type: "GET_POSTS_FROM_FOLLOWED_USERS",
-          payload: posts.data
+          payload: posts.data,
         });
       }
     } catch (err) {
       dispatch({
         type: "POSTS_FROM_FOLLOWED_USERS_ERROR",
-        payload: err
+        payload: err,
       });
     }
   }
@@ -230,13 +231,13 @@ export const GlobalProvider = ({ children }) => {
       } else {
         dispatch({
           type: "GET_USERS",
-          payload: users.data
+          payload: users.data,
         });
       }
     } catch (err) {
       dispatch({
         type: "USERS_ERROR",
-        payload: "Users could not be retrieved!"
+        payload: "Users could not be retrieved!",
       });
     }
   }
@@ -246,9 +247,9 @@ export const GlobalProvider = ({ children }) => {
       const res = await fetch("/api/v1/users", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: user })
+        body: JSON.stringify({ username: user }),
       });
       const userData = await res.json();
 
@@ -257,13 +258,13 @@ export const GlobalProvider = ({ children }) => {
       } else {
         dispatch({
           type: "GET_USER",
-          payload: userData.data
+          payload: userData.data,
         });
       }
     } catch (err) {
       dispatch({
         type: "USER_ERROR",
-        payload: err
+        payload: err,
       });
     }
   }
@@ -276,7 +277,7 @@ export const GlobalProvider = ({ children }) => {
     dispatch({
       type: "TOGGLE_POPUP",
       popup: boolVal,
-      popupType: type
+      popupType: type,
     });
   }
 
@@ -285,21 +286,21 @@ export const GlobalProvider = ({ children }) => {
     clearErrors();
     dispatch({
       type: "TOGGLE_ALLPOSTS",
-      allPosts: boolVal
+      allPosts: boolVal,
     });
   }
 
   function clearMessages() {
     dispatch({
       type: "CLEAR_MESSAGES",
-      msg: ""
+      msg: "",
     });
   }
 
   function clearErrors() {
     dispatch({
       type: "CLEAR_ERRORS",
-      msg: ""
+      msg: "",
     });
   }
 
@@ -308,9 +309,9 @@ export const GlobalProvider = ({ children }) => {
       const res = await fetch("/api/v1/posts", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(post)
+        body: JSON.stringify(post),
       });
       const response = await res.json();
 
@@ -320,13 +321,42 @@ export const GlobalProvider = ({ children }) => {
         dispatch({
           type: "ADD_POST",
           payload: response.data,
-          message: "Successfully added post!"
+          message: "Successfully added post!",
         });
       }
     } catch (err) {
       dispatch({
         type: "POST_ERROR",
-        payload: "Post could not be added!"
+        payload: "Post could not be added!",
+      });
+    }
+  }
+
+  async function addAnswer(answer) {
+    try {
+      const res = await fetch("/api/v1/posts/answer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(answer)
+      });
+
+      const response = await res.json();
+
+      if (response.error) {
+        throw response.error;
+      } else {
+        dispatch({
+          type: "ADD_ANSWER",
+          message: "Successfully added answer!",
+        });
+      }
+    } catch (err) {
+      console.log(err)
+      dispatch({
+        type: "ANSWER_ERROR",
+        payload: "Answer could not be added!",
       });
     }
   }
@@ -336,9 +366,9 @@ export const GlobalProvider = ({ children }) => {
       const res = await fetch("/api/v1/posts/user", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ "username": user})
+        body: JSON.stringify({ username: user }),
       });
       const response = await res.json();
 
@@ -347,13 +377,13 @@ export const GlobalProvider = ({ children }) => {
       } else {
         dispatch({
           type: "GET_POSTS",
-          payload: response.data
+          payload: response.data,
         });
       }
     } catch (err) {
       dispatch({
         type: "POSTS_ERROR",
-        payload: "Posts could not be retrieved!"
+        payload: "Posts could not be retrieved!",
       });
     }
   }
@@ -363,12 +393,12 @@ export const GlobalProvider = ({ children }) => {
       const res = await fetch("/api/v1/users/follow", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userToFollow: userToFollow,
-          username: user
-        })
+          username: user,
+        }),
       });
       const response = await res.json();
 
@@ -378,13 +408,13 @@ export const GlobalProvider = ({ children }) => {
         dispatch({
           type: "ADD_FOLLOW",
           payload: response.data,
-          message: "Successfully added new user to followed!"
+          message: "Successfully added new user to followed!",
         });
       }
     } catch (err) {
       dispatch({
         type: "FOLLOW_ERROR",
-        payload: err
+        payload: err,
       });
     }
   }
@@ -393,7 +423,7 @@ export const GlobalProvider = ({ children }) => {
     try {
       const res = await fetch("/api/v1/files/upload", {
         method: "POST",
-        body: formData
+        body: formData,
       });
       const response = await res.json();
 
@@ -402,13 +432,13 @@ export const GlobalProvider = ({ children }) => {
       } else {
         dispatch({
           type: "UPLOAD_FILE",
-          payload: response.data
+          payload: response.data,
         });
       }
     } catch (err) {
       dispatch({
         type: "UPLOAD_ERROR",
-        payload: err
+        payload: err,
       });
     }
   }
@@ -418,12 +448,12 @@ export const GlobalProvider = ({ children }) => {
       const res = await fetch("/api/v1/files/path", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           username: user,
-          type
-        })
+          type,
+        }),
       });
       const response = await res.json();
 
@@ -432,13 +462,43 @@ export const GlobalProvider = ({ children }) => {
       } else {
         dispatch({
           type: "GET_FILE",
-          filePath: response.path
+          filePath: response.path,
         });
       }
     } catch (err) {
       dispatch({
         type: "GET_FILE_ERROR",
-        error: err
+        error: err,
+      });
+    }
+  }
+
+  async function addRemoveLike(id, user) {
+    try {
+      const res = await fetch("/api/v1/posts/like", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: user,
+          id,
+        }),
+      });
+      const response = await res.json();
+
+      if (response.error) {
+        throw response.error;
+      } else {
+        dispatch({
+          type: "ADD_REMOVE_LIKE",
+          payload: response.data,
+        });
+      }
+    } catch (err) {
+      dispatch({
+        type: "LIKE_ERROR",
+        error: err,
       });
     }
   }
@@ -458,6 +518,7 @@ export const GlobalProvider = ({ children }) => {
         follows: state.follows,
         error: state.error,
         filePath: state.filePath,
+        likeAddedRemoved: state.likeAddedRemoved,
         logoutUser,
         getPosts,
         getPostsFromFollowedUsers,
@@ -469,13 +530,15 @@ export const GlobalProvider = ({ children }) => {
         clearMessages,
         clearErrors,
         addPost,
+        addAnswer,
         getPostsFromUser,
         checkAuthenticated,
         registerUser,
         loginUser,
         changeUserProperty,
         getFile,
-        uploadFile
+        uploadFile,
+        addRemoveLike,
       }}>
       {children}
     </GlobalContext.Provider>
