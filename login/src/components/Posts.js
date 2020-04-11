@@ -99,7 +99,11 @@ export const Posts = () => {
         return (
           <div className="toast show container mt-3" key={postObject._id}>
             <div className="toast-header">
-              <strong className="mr-auto">{postObject.username}</strong>
+              <strong className="mr-auto">
+                <a className="" href={"/user/" + postObject.username}>
+                  {postObject.username}
+                </a>
+              </strong>
               <small className="text-muted">
                 {addZeroToNumbers(date.getHours())}:{addZeroToNumbers(date.getMinutes())} -{" "}
                 {addZeroToNumbers(date.getDate())}.{addZeroToNumbers(date.getMonth() + 1)}.
@@ -151,7 +155,11 @@ export const Posts = () => {
                 return (
                   <div className="toast show col-auto shadow-none" key={answerObject._id}>
                     <div className="toast-header">
-                      <strong className="mr-auto">{answerObject.username}</strong>
+                      <strong className="mr-auto">
+                        <a className="" href={"/user/" + answerObject.username}>
+                          {answerObject.username}
+                        </a>
+                      </strong>
                       <small className="text-muted">
                         {addZeroToNumbers(answerDate.getHours())}:
                         {addZeroToNumbers(answerDate.getMinutes())} -{" "}

@@ -3,7 +3,7 @@ import React from "react";
 export const Welcome = () => {
   return (
     <div className="row mt-5">
-      <div className="col-md-6 m-auto">
+      <div className="mx-auto">
         <div className="card card-body text-center">
           <h1>
             <i className="fab fa-node-js fa-3x"></i>

@@ -116,7 +116,7 @@ export const Profile = () => {
     <>
       <HeaderProfile />
       <MessagesAndErrors />
-      <div className="row mt-5 mx-auto">
+      <div className="row mt-3 mx-auto">
         <div className="card col-md-6 m-auto pl-0 pr-0">
           <div className="bg-primary text-light card-header">
             <h1 className="text-center mb-1">

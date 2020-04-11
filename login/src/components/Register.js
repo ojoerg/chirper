@@ -12,7 +12,7 @@ export const Register = () => {
 
   const { registerUser, clearMessages, clearErrors } = useContext(GlobalContext);
 
-  const onSubmit = e => {
+  const onSubmit = (e) => {
     e.preventDefault();
 
     const newUser = {
@@ -21,7 +21,7 @@ export const Register = () => {
       username: username,
       email: email,
       password: password,
-      password2: password2
+      password2: password2,
     };
 
     clearMessages();
@@ -30,8 +30,8 @@ export const Register = () => {
   };
 
   return (
-    <div className="row mt-5 mx-auto">
-      <div className="col-md-6 m-auto">
+    <div className="row mt-5">
+      <div className="mx-auto">
         <div className="card card-body">
           <h1 className="text-center mb-3">
             <i className="fas fa-user-plus"></i> Register
@@ -47,7 +47,7 @@ export const Register = () => {
                 className="form-control"
                 placeholder="Enter Firstname"
                 value={firstname}
-                onChange={e => setFirstname(e.target.value)}
+                onChange={(e) => setFirstname(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -59,7 +59,7 @@ export const Register = () => {
                 className="form-control"
                 placeholder="Enter Lastname"
                 value={lastname}
-                onChange={e => setLastname(e.target.value)}
+                onChange={(e) => setLastname(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -71,7 +71,7 @@ export const Register = () => {
                 className="form-control"
                 placeholder="Enter Username"
                 value={username}
-                onChange={e => setUsername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -83,7 +83,7 @@ export const Register = () => {
                 className="form-control"
                 placeholder="Enter Email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -95,7 +95,7 @@ export const Register = () => {
                 className="form-control"
                 placeholder="Create Password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -107,7 +107,7 @@ export const Register = () => {
                 className="form-control"
                 placeholder="Confirm Password"
                 value={password2}
-                onChange={e => setPassword2(e.target.value)}
+                onChange={(e) => setPassword2(e.target.value)}
               />
             </div>
             <button type="submit" className="btn btn-primary btn-block">

@@ -291,16 +291,14 @@ export const GlobalProvider = ({ children }) => {
   }
 
   function clearMessages() {
-    dispatch({
-      type: "CLEAR_MESSAGES",
-      msg: "",
-    });
+      dispatch({
+        type: "CLEAR_MESSAGES"
+      });
   }
 
   function clearErrors() {
     dispatch({
-      type: "CLEAR_ERRORS",
-      msg: "",
+      type: "CLEAR_ERRORS"
     });
   }
 
