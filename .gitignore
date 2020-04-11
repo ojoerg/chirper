@@ -2,3 +2,4 @@ node_modules
 login/node_modules
 config/config.env
 UserFiles/
+login/.env
